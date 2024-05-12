@@ -46,7 +46,7 @@ import io.github.acoboh.query.filter.mongodb.processor.QFProcessor;
  * 
  */
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnProperty(prefix = "query.filter.post-processor", name = "enabled", havingValue = "true", matchIfMissing = false)
+@ConditionalOnProperty(prefix = "query.filter.post-processor", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class QFBeanFactoryPostProcessor
 		implements ApplicationContextAware, BeanDefinitionRegistryPostProcessor, Ordered {
 
