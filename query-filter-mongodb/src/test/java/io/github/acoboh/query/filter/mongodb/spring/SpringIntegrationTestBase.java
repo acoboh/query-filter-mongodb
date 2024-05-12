@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.index.TextIndexDefinition;
 import org.springframework.data.mongodb.core.index.TextIndexDefinition.TextIndexDefinitionBuilder;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 
@@ -23,11 +24,12 @@ import io.github.acoboh.query.filter.mongodb.repositories.PostBlogDocumentReposi
 
 public class SpringIntegrationTestBase {
 
-	@Configuration
+	@Configuration(proxyBeanMethods = false)
 	@EnableMongoRepositories(basePackageClasses = PostBlogDocumentRepository.class)
 	@EnableTransactionManagement
 	@Import(QueryFilterAutoconfigure.class)
 	@EnableQueryFilter(basePackageClasses = BasicDocumentFilterDef.class)
+	@EnableWebMvc
 	public static class Config {
 
 		@Container

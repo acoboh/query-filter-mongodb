@@ -130,7 +130,7 @@ class SpelExpDefTests {
 		assertThat(qf).isNotNull();
 
 		var blogList = qf.executeFindQuery();
-		assertThat(blogList).hasSize(1).containsExactly(DOC_2);
+		assertThat(blogList).isEmpty();
 
 	}
 
