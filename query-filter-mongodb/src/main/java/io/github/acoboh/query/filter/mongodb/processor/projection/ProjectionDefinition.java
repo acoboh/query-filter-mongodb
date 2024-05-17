@@ -80,8 +80,6 @@ public class ProjectionDefinition {
 				} else {
 					fields.addAll(getAllFieldNames(listClass, prefix + fieldName + "."));
 				}
-
-				fields.addAll(getAllFieldNames(listClass, prefix + fieldName + "."));
 			} else { // Is an object
 				fields.addAll(getAllFieldNames(ret, prefix + fieldName + "."));
 			}
