@@ -74,6 +74,13 @@ public class ProjectionDefinition {
 				fields.add(prefix + fieldName);
 			} else if (ClassUtils.isListArrayOrSet(ret)) {
 				Class<?> listClass = ClassUtils.getClassOfList(field);
+
+				if (ClassUtils.isPrimitiveOrBasic(listClass)) {
+					fields.add(prefix + fieldName);
+				} else {
+					fields.addAll(getAllFieldNames(listClass, prefix + fieldName + "."));
+				}
+
 				fields.addAll(getAllFieldNames(listClass, prefix + fieldName + "."));
 			} else { // Is an object
 				fields.addAll(getAllFieldNames(ret, prefix + fieldName + "."));
