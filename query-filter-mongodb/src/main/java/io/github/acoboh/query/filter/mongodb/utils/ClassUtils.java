@@ -66,7 +66,7 @@ public class ClassUtils {
 			return listClass;
 		}
 
-		throw new QFTypeException(null, "It is not a valid list type");
+		throw new QFTypeException(field.getName(), "It is not a valid list type");
 	}
 
 	/**
