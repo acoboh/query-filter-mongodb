@@ -79,16 +79,13 @@ public class ClassUtils {
 	 * @return true if primitive, false otherwise
 	 */
 	public static boolean isPrimitiveOrBasic(Class<?> fieldClass) {
-		return fieldClass.isPrimitive() || fieldClass.isAssignableFrom(Double.class)
-				|| fieldClass.isAssignableFrom(Double.TYPE) || fieldClass.isAssignableFrom(Integer.class)
-				|| fieldClass.isAssignableFrom(Integer.TYPE) || fieldClass.isAssignableFrom(Long.class)
-				|| fieldClass.isAssignableFrom(Long.TYPE) || fieldClass.isAssignableFrom(Short.class)
-				|| fieldClass.isAssignableFrom(Short.TYPE) || fieldClass.isAssignableFrom(Float.class)
+		return fieldClass.isPrimitive() || Number.class.isAssignableFrom(fieldClass)
+				|| fieldClass.isAssignableFrom(Double.TYPE) || fieldClass.isAssignableFrom(Integer.TYPE)
+				|| fieldClass.isAssignableFrom(Long.TYPE) || fieldClass.isAssignableFrom(Short.TYPE)
 				|| fieldClass.isAssignableFrom(Float.TYPE) || fieldClass.isAssignableFrom(Boolean.class)
-				|| fieldClass.isAssignableFrom(Boolean.TYPE) || fieldClass.isAssignableFrom(Number.class)
-				|| fieldClass.isAssignableFrom(String.class) || fieldClass.isAssignableFrom(Enum.class)
-				|| fieldClass.isAssignableFrom(UUID.class) || fieldClass.isAssignableFrom(LocalDateTime.class)
-				|| fieldClass.isAssignableFrom(Timestamp.class);
+				|| fieldClass.isAssignableFrom(Boolean.TYPE) || fieldClass.isAssignableFrom(String.class)
+				|| fieldClass.isAssignableFrom(Enum.class) || fieldClass.isAssignableFrom(UUID.class)
+				|| fieldClass.isAssignableFrom(LocalDateTime.class) || fieldClass.isAssignableFrom(Timestamp.class);
 
 	}
 
