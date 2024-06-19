@@ -55,18 +55,18 @@
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
+		<nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
 		<maven-source-plugin.version>3.3.1</maven-source-plugin.version>
-		<maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
+		<maven-javadoc-plugin.version>3.7.0</maven-javadoc-plugin.version>
 		<maven-gpg-plugin.version>3.2.4</maven-gpg-plugin.version>
 
 		<datasource-proxy.version>1.6</datasource-proxy.version>
-		<testcontainers.version>1.19.7</testcontainers.version>
-		<junit.version>5.11.0-M1</junit.version>
-		<assertj-core.version>3.25.3</assertj-core.version>
+		<testcontainers.version>1.19.8</testcontainers.version>
+		<junit.version>5.11.0-M2</junit.version>
+		<assertj-core.version>3.26.0</assertj-core.version>
 
 		<!-- Guava dependencies -->
-		<guava.version>33.1.0-jre</guava.version>
+		<guava.version>33.2.1-jre</guava.version>
 
 		<!-- JDBC Driver versions -->
 		<postgresql.version>42.7.3</postgresql.version>
