@@ -7,17 +7,12 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import io.github.acoboh.query.filter.mongodb.operations.QFOperationEnum;
-
 /**
  * Used to force hide from parsing phase.
  * <p>
  * You can specify internal parsing like roles or administrator fields you do not want to set visible for external usage. After
- * the creation, you can add the field with methods of class {@link io.github.acoboh.query.filter.jpa.processor.QueryFilter}
+ * the creation, you can add the field with methods of class {@link io.github.acoboh.query.filter.mongodb.processor.QueryFilter}
  * <p>
- * Methods available:
- * <p>
- * {@link io.github.acoboh.query.filter.jpa.processor.QueryFilter#addNewField(String, QFOperationEnum, String)}
  *
  * @author Adrián Cobo
  * 

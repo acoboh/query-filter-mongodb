@@ -215,7 +215,6 @@ public enum QFOperationEnum implements QFOperationResolutor {
 	 * Get allowed operations of any class
 	 *
 	 * @param clazz        class to check
-	 * @param isArrayTyped if the field is array typed
 	 * @return set of operations
 	 */
 	public static Set<QFOperationEnum> getOperationsOfClass(Class<?> clazz) {
