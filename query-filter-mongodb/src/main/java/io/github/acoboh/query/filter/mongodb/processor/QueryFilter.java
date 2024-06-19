@@ -2,6 +2,7 @@ package io.github.acoboh.query.filter.mongodb.processor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.ProjectionOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -324,21 +326,29 @@ public class QueryFilter<E> {
 
 	private Query processSort(Query baseQuery) {
 
-		var sortList = defaultSortEnabled ? defaultSorting : sortDefinitionList;
-		if (!sortList.isEmpty()) {
-			LOGGER.trace("Adding all sort operations");
-
-			List<Order> orders = new ArrayList<>(sortList.size());
-
-			for (var sortOp : sortList) {
-				orders.add(parseSort(sortOp));
-			}
-
-			baseQuery = baseQuery.with(Sort.by(orders));
-
+		var orders = getOrders();
+		if (orders.isEmpty()) {
+			return baseQuery;
 		}
-		return baseQuery;
 
+		return baseQuery.with(Sort.by(orders));
+
+	}
+
+	private List<Order> getOrders() {
+		var sortList = defaultSortEnabled ? defaultSorting : sortDefinitionList;
+		if (sortList.isEmpty()) {
+			return Collections.emptyList();
+		}
+		LOGGER.trace("Adding all sort operations");
+
+		List<Order> orders = new ArrayList<>(sortList.size());
+
+		for (var sortOp : sortList) {
+			orders.add(parseSort(sortOp));
+		}
+
+		return orders;
 	}
 
 	/**
@@ -359,12 +369,25 @@ public class QueryFilter<E> {
 	 * @return a page of entities
 	 */
 	public <T> List<T> executeAggregateAndProject(Class<T> returnType) {
-		var query = toCriteriaQuery(true);
+		var query = toCriteria();
 
-		var aggregation = Aggregation.newAggregation(Aggregation.match(Criteria.byExample(query.getQueryObject())),
-				getProjectionOfClass(returnType));
+		List<AggregationOperation> aggs = new ArrayList<>(3);
 
-		return mongoTemplate.aggregate(aggregation, entityClass, returnType).getMappedResults();
+		aggs.add(Aggregation.match(query));
+
+		var orders = getOrders();
+		if (!orders.isEmpty()) {
+			aggs.add(Aggregation.sort(Sort.by(orders)));
+		}
+
+		aggs.add(getProjectionOfClass(returnType));
+
+		var pipeline = Aggregation.newAggregation(aggs);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Final generated aggregate pipeline: '{}'", pipeline);
+		}
+
+		return mongoTemplate.aggregate(pipeline, entityClass, returnType).getMappedResults();
 	}
 
 	/**
@@ -377,10 +400,25 @@ public class QueryFilter<E> {
 	public <T> Page<T> executeAggregateAndProject(Pageable pageable, Class<T> returnType) {
 		var query = toCriteria();
 
-		var aggregation = Aggregation.newAggregation(Aggregation.match(query), getProjectionOfClass(returnType),
-				Aggregation.skip(pageable.getOffset()), Aggregation.limit(pageable.getPageSize()));
+		List<AggregationOperation> aggs = new ArrayList<>(5);
 
-		var results = mongoTemplate.aggregate(aggregation, entityClass, returnType).getMappedResults();
+		aggs.add(Aggregation.match(query));
+
+		var orders = getOrders();
+		if (!orders.isEmpty()) {
+			aggs.add(Aggregation.sort(Sort.by(orders)));
+		}
+
+		aggs.add(getProjectionOfClass(returnType));
+		aggs.add(Aggregation.skip(pageable.getOffset()));
+		aggs.add(Aggregation.limit(pageable.getPageSize()));
+
+		var pipeline = Aggregation.newAggregation(aggs);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Final generated aggregate pipeline: '{}'", pipeline);
+		}
+
+		var results = mongoTemplate.aggregate(pipeline, entityClass, returnType).getMappedResults();
 
 		return PageableExecutionUtils.getPage(results, pageable, () -> executeQueryCount(query));
 	}
