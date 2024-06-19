@@ -77,7 +77,6 @@ public enum PredicateOperation {
 	/**
 	 * Resolve the predicate with criteria builder
 	 * 
-	 * @param cb         Criteria builder
 	 * @param predicates Predicates to be used on operation
 	 *
 	 * @return the predicate

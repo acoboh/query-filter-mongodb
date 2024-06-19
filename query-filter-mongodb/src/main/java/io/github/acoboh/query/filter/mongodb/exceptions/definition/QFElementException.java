@@ -2,7 +2,7 @@ package io.github.acoboh.query.filter.mongodb.exceptions.definition;
 
 /**
  * Exception when the field has not presented the annotation
- * {@link io.github.acoboh.query.filter.jpa.annotations.QFDefinitionClass}
+ * {@link io.github.acoboh.query.filter.mongodb.annotations.QFDefinitionClass}
  *
  * @author Adrián Cobo
  * 

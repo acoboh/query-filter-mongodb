@@ -38,12 +38,8 @@ class SecuritySpelResolverContext extends SpelResolverContext {
 	 * Default constructor
 	 *
 	 * @param securityExpressionHandlers security expression handlers
-	 * @param request                    actual request
-	 * @param response                   actual response
 	 */
 	public SecuritySpelResolverContext(List<SecurityExpressionHandler<?>> securityExpressionHandlers) {
-//		super(request, response);
-//		var request2 = appContext.getBean(HttpServletRequest.class);
 		securityExpressionHandler = getFilterSecurityHandler(securityExpressionHandlers);
 	}
 
