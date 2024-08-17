@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>io.github.acoboh</groupId>
 		<artifactId>query-filter-mongodb-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.1</version>
 		<relativePath>../</relativePath>
 	</parent>
 
@@ -17,7 +17,7 @@
 
 	<properties>
 		<!-- Spring dependencies -->
-		<spring-boot.version>3.3.0</spring-boot.version>
+		<spring-boot.version>3.3.2</spring-boot.version>
 
 		<!-- Reflections -->
 		<reflections.version>0.10.2</reflections.version>
@@ -108,18 +108,6 @@
 			<optional>true</optional>
 		</dependency>
 
-
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-		</dependency>
-
 		<!-- Reflections -->
 		<dependency>
 			<groupId>org.reflections</groupId>
@@ -134,7 +122,6 @@
 		</dependency>
 
 		<!-- TEST SCOPE -->
-
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
