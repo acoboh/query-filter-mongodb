@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  db_mongodb:
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: acoboh
+    volumes: 
+      - db_mongodb:/data/db
+    ports:
+      - 27017:27017
+volumes:
+  db_mongodb:
+    driver: local
