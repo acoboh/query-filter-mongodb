@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +26,12 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 
 import io.github.acoboh.query.filter.mongodb.annotations.QFParam;
 import io.github.acoboh.query.filter.mongodb.operations.QFOperationEnum;
+import io.github.acoboh.query.filter.mongodb.operations.QFOperationTextEnum;
 import io.github.acoboh.query.filter.mongodb.processor.QFProcessor;
 import io.github.acoboh.query.filter.mongodb.processor.definitions.IDefinitionSortable;
 import io.github.acoboh.query.filter.mongodb.processor.definitions.QFAbstractDefinition;
 import io.github.acoboh.query.filter.mongodb.processor.definitions.QFDefinitionElement;
+import io.github.acoboh.query.filter.mongodb.processor.definitions.QFDefinitionText;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
@@ -181,6 +184,13 @@ class OpenApiCustomiserImpl implements OpenApiCustomizer {
 					builder.append(operationsAvailable).append("</i>]");
 				}
 
+			}
+
+			if (def instanceof QFDefinitionText) {
+				String operations = Stream.of(QFOperationTextEnum.values()).map(QFOperationTextEnum::getValue)
+						.collect(Collectors.joining(","));
+
+				builder.append(" <i>(Text)</i> Operations:[<i>").append(operations).append("</i>]");
 			}
 
 			if (def instanceof IDefinitionSortable idef && idef.isSortable()) {

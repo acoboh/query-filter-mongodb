@@ -12,6 +12,7 @@ The QueryFilterMongoDB Library adds the possibility of creating custom filters w
 
 ## Features
 
+* Easy installation on Spring Boot 3.X
 * Create filter specifications based on Entity Models
 * Convert RHS Colon or LHS Brackets filter into a MongoDB Query.
 * Manually add fields and block operations on each new filter field.
@@ -27,7 +28,7 @@ You can install the library by adding the following dependency to your project's
 <dependency>
     <groupId>io.github.acoboh</groupId>
     <artifactId>query-filter-mongodb</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
 </dependency>
 ```
 
@@ -164,7 +165,7 @@ You need to import the following library:
 <dependency>
     <groupId>io.github.acoboh</groupId>
     <artifactId>query-filter-mongodb-openapi</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
 </dependency>
 ```
 
