@@ -425,10 +425,10 @@ public class QueryFilter<E> {
 		var orders = getOrders();
 		boolean aggregated = false;
 		if (!orders.isEmpty()) {
-			boolean firstOrder = false;
+			boolean firstOrder = true;
 			if (mapProjections.containsKey(returnType)) {
 				var projectionSet = mapProjections.get(returnType).getFieldKeys();
-				firstOrder = orders.stream().allMatch(e -> projectionSet.contains(e.getProperty()));
+				firstOrder = !orders.stream().allMatch(e -> projectionSet.contains(e.getProperty()));
 			}
 
 			if (firstOrder) {
