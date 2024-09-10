@@ -8,6 +8,7 @@
 	</appender>
 
 	<logger name="io.github.acoboh" level="DEBUG"/>
+	<logger name="org.springframework.data.mongodb.core.MongoTemplate" level="DEBUG"/>
 	
 	<root level="INFO">
 		<appender-ref ref="STDOUT" />

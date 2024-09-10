@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.Fields;
@@ -21,6 +22,7 @@ public class ProjectionDefinition {
 	private final Class<?> returnType;
 
 	private final ProjectionOperation projectionOperation;
+	private final Set<String> fieldKeys;
 
 	/**
 	 * Default constructor
@@ -41,6 +43,7 @@ public class ProjectionDefinition {
 		}
 
 		projectionOperation = Aggregation.project(fieldsAggregation);
+		fieldKeys = Set.of(fields);
 	}
 
 	/**
@@ -59,6 +62,15 @@ public class ProjectionDefinition {
 	 */
 	public ProjectionOperation getProjectionOperation() {
 		return projectionOperation;
+	}
+
+	/**
+	 * Get the field keys
+	 * 
+	 * @return The field keys
+	 */
+	public Set<String> getFieldKeys() {
+		return fieldKeys;
 	}
 
 	private static List<String> getAllFieldNames(Class<?> returnType, String prefix) throws QFTypeException {
