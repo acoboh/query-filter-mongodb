@@ -28,7 +28,7 @@ You can install the library by adding the following dependency to your project's
 <dependency>
     <groupId>io.github.acoboh</groupId>
     <artifactId>query-filter-mongodb</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 </dependency>
 ```
 
@@ -165,7 +165,7 @@ You need to import the following library:
 <dependency>
     <groupId>io.github.acoboh</groupId>
     <artifactId>query-filter-mongodb-openapi</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 </dependency>
 ```
 

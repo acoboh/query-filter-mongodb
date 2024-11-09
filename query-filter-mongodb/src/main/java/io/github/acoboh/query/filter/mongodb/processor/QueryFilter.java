@@ -366,29 +366,11 @@ public class QueryFilter<E> {
 		aggs.add(Aggregation.match(query));
 
 		var orders = getOrders();
-		boolean aggregated = false;
 		if (!orders.isEmpty()) {
-			boolean firstOrder = true;
-			if (mapProjections.containsKey(returnType)) {
-				var projectionSet = mapProjections.get(returnType).getFieldKeys();
-				firstOrder = !orders.stream().allMatch(e -> projectionSet.contains(e.getProperty()));
-			}
-
-			if (firstOrder) {
-				aggs.add(Aggregation.sort(Sort.by(orders)));
-				aggs.add(getProjectionOfClass(returnType));
-			} else {
-				aggs.add(getProjectionOfClass(returnType));
-				aggs.add(Aggregation.sort(Sort.by(orders)));
-			}
-
-			aggregated = true;
-
+			aggs.add(Aggregation.sort(Sort.by(orders)));
 		}
 
-		if (!aggregated) {
-			aggs.add(getProjectionOfClass(returnType));
-		}
+		aggs.add(getProjectionOfClass(returnType));
 
 		var pipeline = Aggregation.newAggregation(aggs);
 		if (LOGGER.isDebugEnabled()) {
@@ -414,30 +396,11 @@ public class QueryFilter<E> {
 		aggs.add(Aggregation.match(query));
 
 		var orders = getOrders();
-		boolean aggregated = false;
 		if (!orders.isEmpty()) {
-			boolean firstOrder = true;
-			if (mapProjections.containsKey(returnType)) {
-				var projectionSet = mapProjections.get(returnType).getFieldKeys();
-				firstOrder = !orders.stream().allMatch(e -> projectionSet.contains(e.getProperty()));
-			}
-
-			if (firstOrder) {
-				aggs.add(Aggregation.sort(Sort.by(orders)));
-				aggs.add(getProjectionOfClass(returnType));
-			} else {
-				aggs.add(getProjectionOfClass(returnType));
-				aggs.add(Aggregation.sort(Sort.by(orders)));
-			}
-
-			aggregated = true;
-
+			aggs.add(Aggregation.sort(Sort.by(orders)));
 		}
 
-		if (!aggregated) {
-			aggs.add(getProjectionOfClass(returnType));
-		}
-
+		aggs.add(getProjectionOfClass(returnType));
 		aggs.add(Aggregation.skip(pageable.getOffset()));
 		aggs.add(Aggregation.limit(pageable.getPageSize()));
 
