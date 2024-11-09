@@ -56,8 +56,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
- * The QueryFilter class is responsible for parsing and processing query filter parameters to generate MongoDB queries. It
- * provides methods to construct criteria queries and execute find queries based on the parsed filter parameters.
+ * The QueryFilter class is responsible for parsing and processing query filter
+ * parameters to generate MongoDB queries. It provides methods to construct
+ * criteria queries and execute find queries based on the parsed filter
+ * parameters.
  *
  * @param <E> the entity class type
  */
@@ -65,7 +67,6 @@ public class QueryFilter<E> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(QueryFilter.class);
 
-	private static final String REGEX_SORT = "^[a-zA-Z0-9]+=([+-]?[a-zA-Z0-9]+)(,[+-]?[a-zA-Z0-9]+)*+$";
 	private static final Pattern REGEX_PATTERN = Pattern.compile("([+-])([a-zA-Z0-9]+)");
 
 	private final String initialInput;
@@ -129,15 +130,19 @@ public class QueryFilter<E> {
 		this.initialInput = input != null ? input : "";
 
 		if (input != null && !input.isEmpty()) {
-			String[] parts = input.split("&");
 
-			for (String part : parts) {
-				if (part.matches(type.getFullRegex())) {
-					parseValuePart(part, type);
-				} else if (part.matches(REGEX_SORT)) {
-					parseSortPart(part);
+			var matcher = type.getPattern().matcher(input);
+			while (matcher.find()) {
+				if (LOGGER.isTraceEnabled()) {
+					LOGGER.trace("Found match: {}", matcher.group());
+				}
+
+				if (matcher.group(1) != null) {
+					parseSortPart(matcher.group(2));
+				} else if (matcher.group(3) != null) {
+					parseValuePart(matcher.group(4), matcher.group(5), matcher.group(6));
 				} else {
-					throw new QFParseException(part, input);
+					throw new QFParseException(matcher.group(), input);
 				}
 
 			}
@@ -147,19 +152,9 @@ public class QueryFilter<E> {
 
 	}
 
-	private void parseValuePart(String part, QFParamType type)
+	private void parseValuePart(String field, String op, String value)
 			throws QFParseException, QFFieldNotFoundException, QFOperationNotFoundException,
 			QFDiscriminatorNotFoundException, QFBlockException, QFJsonParseException, QFNotValuable {
-
-		Matcher matcher = type.getPattern().matcher(part);
-		if (!(matcher.find() && matcher.groupCount() == 3)) {
-			LOGGER.error("Error parsing part {}. Matcher not found matches", part);
-			throw new QFParseException(part, type.name());
-		}
-
-		String field = matcher.group(1);
-		String op = matcher.group(2);
-		String value = matcher.group(3);
 
 		QFAbstractDefinition def = definitionMap.get(field);
 		if (def == null) {
@@ -172,10 +167,11 @@ public class QueryFilter<E> {
 
 		QFSpecificationPart qfSpecificationPart;
 		if (def instanceof QFDefinitionElement qdef) {
-			qfSpecificationPart = new QFElementMatch(Arrays.asList(value.split(",")), QFOperationEnum.fromValue(op),
-					qdef);
+			var operation = op == null ? QFOperationEnum.EQUAL : QFOperationEnum.fromValue(op);
+			qfSpecificationPart = new QFElementMatch(Arrays.asList(value.split(",")), operation, qdef);
 		} else if (def instanceof QFDefinitionText qdef) {
-			qfSpecificationPart = new QFTextMatch(value, QFOperationTextEnum.fromValue(op), qdef);
+			var operation = op == null ? QFOperationTextEnum.EQUAL : QFOperationTextEnum.fromValue(op);
+			qfSpecificationPart = new QFTextMatch(value, operation, qdef);
 		} else {
 			throw new QFNotValuable(field);
 		}
@@ -184,24 +180,13 @@ public class QueryFilter<E> {
 
 	}
 
-	private void parseSortPart(String part)
+	private void parseSortPart(String values)
 			throws QFParseException, QFNotSortableException, QFMultipleSortException, QFFieldNotFoundException {
 
-		if (!part.startsWith(queryFilterClassAnnotation.sortProperty() + "=")) {
-			throw new QFParseException(part, "sort part");
-		}
-
-		String partPostEqual = part.substring(part.indexOf('='));
-
-		String[] parts = partPostEqual.split(",");
-
-		for (String orderPart : parts) {
-
-			Matcher matcher = REGEX_PATTERN.matcher(orderPart);
-			if (!matcher.find() || matcher.groupCount() != 2) {
-				LOGGER.error("Error parsing sort part {}, Matcher not found matches", orderPart);
-				throw new QFParseException(orderPart, "sort part");
-			}
+		Matcher matcher = REGEX_PATTERN.matcher(values);
+		boolean match = false;
+		while (matcher.find()) {
+			match = true;
 
 			String order = matcher.group(1);
 			String fieldName = matcher.group(2);
@@ -219,17 +204,20 @@ public class QueryFilter<E> {
 				throw new QFMultipleSortException(fieldName);
 			}
 
-			Direction dir;
+			Sort.Direction dir;
 			if (order.equals("+")) {
-				dir = Direction.ASC;
+				dir = Sort.Direction.ASC;
 			} else {
-				dir = Direction.DESC;
+				dir = Sort.Direction.DESC;
 			}
 
-			Pair<IDefinitionSortable, Direction> pair = Pair.of((IDefinitionSortable) def, dir);
+			Pair<IDefinitionSortable, Sort.Direction> pair = Pair.of((IDefinitionSortable) def, dir);
 			this.sortDefinitionList.add(pair);
 			this.defaultSortEnabled = false;
 
+		}
+		if (!match) {
+			throw new QFParseException(values, initialInput);
 		}
 
 	}
@@ -286,7 +274,8 @@ public class QueryFilter<E> {
 	}
 
 	/**
-	 * Generate a Criteria query based on the parsed filter parameters with sort operations
+	 * Generate a Criteria query based on the parsed filter parameters with sort
+	 * operations
 	 * 
 	 * @return a Criteria query
 	 */
@@ -363,7 +352,8 @@ public class QueryFilter<E> {
 	}
 
 	/**
-	 * Execute a aggregate query based on the parsed filter parameters with pagination
+	 * Execute a aggregate query based on the parsed filter parameters with
+	 * pagination
 	 * 
 	 * @param returnType the return type of the projection
 	 * @return a page of entities
@@ -409,7 +399,8 @@ public class QueryFilter<E> {
 	}
 
 	/**
-	 * Execute a aggregate query based on the parsed filter parameters with pagination
+	 * Execute a aggregate query based on the parsed filter parameters with
+	 * pagination
 	 * 
 	 * @param pageable   the pagination information
 	 * @param returnType the return type of the projection

@@ -53,7 +53,7 @@ class OpenApiCustomiserImpl implements OpenApiCustomizer {
 	/**
 	 * Default constructor
 	 *
-	 * @param endpoints endpoints
+	 * @param applicationContext appContext
 	 */
 	OpenApiCustomiserImpl(ApplicationContext applicationContext) {
 		this.applicationContext = applicationContext;

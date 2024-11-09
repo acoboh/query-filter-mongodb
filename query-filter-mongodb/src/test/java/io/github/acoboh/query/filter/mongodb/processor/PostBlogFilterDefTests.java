@@ -127,6 +127,12 @@ class PostBlogFilterDefTests {
 
 		list = qf.executeFindQuery();
 		assertThat(list).hasSize(1).containsExactly(DOC_2);
+
+		qf = qfProcessor.newQueryFilter("id=1", QFParamType.RHS_COLON);
+		assertThat(qf).isNotNull();
+
+		list = qf.executeFindQuery();
+		assertThat(list).hasSize(1).containsExactly(DOC_1);
 	}
 
 	@Test
