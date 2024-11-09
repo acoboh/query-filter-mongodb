@@ -57,7 +57,7 @@ public class QFBeanFactoryPostProcessor
 		this.applicationContext = applicationContext;
 	}
 
-	private static Set<Class<?>> getClassAnnotated(List<String> packages, Class<? extends Annotation> annotation) {
+	private static Set<Class<?>> getClassAnnotated(List<String> packages) {
 
 		Assert.notNull(packages, "packages must not be null");
 
@@ -81,7 +81,7 @@ public class QFBeanFactoryPostProcessor
 				return matches;
 			}));
 
-			Set<Class<?>> classFound = reflect.getTypesAnnotatedWith(annotation);
+			Set<Class<?>> classFound = reflect.getTypesAnnotatedWith(QFDefinitionClass.class);
 
 			LOGGER.info("Found {} classes on package {}", classFound.size(), pack);
 
@@ -206,11 +206,11 @@ public class QFBeanFactoryPostProcessor
 		if (packagesToAnalyze.isEmpty()) {
 			LOGGER.debug("Trying get SpringBootApplication beans to search for QueryFilter classes...");
 			packagesToAnalyze = getBeansWithAnnotation(SpringBootApplication.class, false,
-					(scan, instance) -> Arrays.asList(instance.getClass().toString()));
+					(scan, instance) -> List.of(instance.getClass().toString()));
 
 		}
 
-		Set<Class<?>> classSet = getClassAnnotated(packagesToAnalyze, QFDefinitionClass.class);
+		Set<Class<?>> classSet = getClassAnnotated(packagesToAnalyze);
 
 		for (Class<?> cl : classSet) {
 			try {

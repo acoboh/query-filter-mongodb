@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import io.github.acoboh.query.filter.mongodb.processor.QueryFilter;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.GenericConverter;
@@ -14,12 +13,12 @@ import org.springframework.data.util.Pair;
 
 import io.github.acoboh.query.filter.mongodb.annotations.QFParam;
 import io.github.acoboh.query.filter.mongodb.processor.QFProcessor;
+import io.github.acoboh.query.filter.mongodb.processor.QueryFilter;
 
 /**
  * Class with for custom converters of Spring Boot.
  * <p>
- * This class allows inject {@linkplain QueryFilterReactive} objects on
- * controllers
+ * This class allows to inject {@linkplain QueryFilter} objects on controllers
  *
  * @author Adrián Cobo
  * 

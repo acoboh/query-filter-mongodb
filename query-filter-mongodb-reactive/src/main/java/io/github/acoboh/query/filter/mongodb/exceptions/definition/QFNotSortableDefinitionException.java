@@ -1,7 +1,8 @@
 package io.github.acoboh.query.filter.mongodb.exceptions.definition;
 
 /**
- * Exception thrown if any element is used on default sorting options and the element is not sortable
+ * Exception thrown if any element is used on default sorting options and the
+ * element is not sortable
  * 
  * @author Adrián Cobo
  *

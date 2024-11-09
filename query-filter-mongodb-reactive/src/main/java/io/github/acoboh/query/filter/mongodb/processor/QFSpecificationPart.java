@@ -22,7 +22,7 @@ public interface QFSpecificationPart {
 	 * @param mlmap        multi-value map
 	 * @param spelResolver SpEL resolver
 	 */
-	public Mono<Void> processPart(Map<String, List<Criteria>> criteriaMap, MultiValueMap<String, Object> mlmap,
+	Mono<Void> processPart(Map<String, List<Criteria>> criteriaMap, MultiValueMap<String, Object> mlmap,
 			SpelResolverInterface spelResolver);
 
 	/**
@@ -30,6 +30,6 @@ public interface QFSpecificationPart {
 	 * 
 	 * @return definition
 	 */
-	public QFAbstractDefinition getDefinition();
+	QFAbstractDefinition getDefinition();
 
 }

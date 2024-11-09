@@ -1,7 +1,8 @@
 package io.github.acoboh.query.filter.mongodb.exceptions.definition;
 
 /**
- * Exception thrown when the array level is not sub-path of the main selected path
+ * Exception thrown when the array level is not sub-path of the main selected
+ * path
  *
  * @author Adrián Cobo
  * 

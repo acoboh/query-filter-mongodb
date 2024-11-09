@@ -304,32 +304,15 @@ public class QueryFilter<E> {
 
 		return toCriteria().flatMapMany(query -> {
 			List<AggregationOperation> aggs = new ArrayList<>(3);
+
 			aggs.add(Aggregation.match(query));
 
 			var orders = getOrders();
-			boolean aggregated = false;
 			if (!orders.isEmpty()) {
-				boolean firstOrder = true;
-				if (mapProjections.containsKey(returnType)) {
-					var projectionSet = mapProjections.get(returnType).getFieldKeys();
-					firstOrder = !orders.stream().allMatch(e -> projectionSet.contains(e.getProperty()));
-				}
-
-				if (firstOrder) {
-					aggs.add(Aggregation.sort(Sort.by(orders)));
-					aggs.add(getProjectionOfClass(returnType));
-				} else {
-					aggs.add(getProjectionOfClass(returnType));
-					aggs.add(Aggregation.sort(Sort.by(orders)));
-				}
-
-				aggregated = true;
-
+				aggs.add(Aggregation.sort(Sort.by(orders)));
 			}
 
-			if (!aggregated) {
-				aggs.add(getProjectionOfClass(returnType));
-			}
+			aggs.add(getProjectionOfClass(returnType));
 
 			var pipeline = Aggregation.newAggregation(aggs);
 			if (LOGGER.isDebugEnabled()) {
@@ -351,51 +334,31 @@ public class QueryFilter<E> {
 	 * @return a page of entities
 	 */
 	public <T> Mono<Page<T>> executeAggregateAndProject(Pageable pageable, Class<T> returnType) {
-		var query = toCriteria();
+		return toCriteria().flatMap(query -> {
+			List<AggregationOperation> aggs = new ArrayList<>(5);
 
-		List<AggregationOperation> aggs = new ArrayList<>(5);
+			aggs.add(Aggregation.match(query));
 
-		aggs.add(Aggregation.match(query.block()));
-
-		var orders = getOrders();
-		boolean aggregated = false;
-		if (!orders.isEmpty()) {
-			boolean firstOrder = true;
-			if (mapProjections.containsKey(returnType)) {
-				var projectionSet = mapProjections.get(returnType).getFieldKeys();
-				firstOrder = !orders.stream().allMatch(e -> projectionSet.contains(e.getProperty()));
-			}
-
-			if (firstOrder) {
-				aggs.add(Aggregation.sort(Sort.by(orders)));
-				aggs.add(getProjectionOfClass(returnType));
-			} else {
-				aggs.add(getProjectionOfClass(returnType));
+			var orders = getOrders();
+			if (!orders.isEmpty()) {
 				aggs.add(Aggregation.sort(Sort.by(orders)));
 			}
 
-			aggregated = true;
-
-		}
-
-		if (!aggregated) {
 			aggs.add(getProjectionOfClass(returnType));
-		}
+			aggs.add(Aggregation.skip(pageable.getOffset()));
+			aggs.add(Aggregation.limit(pageable.getPageSize()));
 
-		aggs.add(Aggregation.skip(pageable.getOffset()));
-		aggs.add(Aggregation.limit(pageable.getPageSize()));
+			var pipeline = Aggregation.newAggregation(aggs);
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Final generated aggregate pipeline: '{}'", pipeline);
+			}
 
-		var pipeline = Aggregation.newAggregation(aggs);
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Final generated aggregate pipeline: '{}'", pipeline);
-		}
+			var results = mongoTemplate.aggregate(pipeline, entityClass, returnType);
 
-		mongoTemplate.aggregate(pipeline, entityClass, returnType);
+			return results.collectList().zipWith(executeQueryCount(query))
+					.map(tuple -> new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
+		});
 
-		var results = mongoTemplate.aggregate(pipeline, entityClass, returnType);
-
-		return results.collectList().zipWith(executeQueryCount(query.block()))
-				.map(tuple -> new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
 	}
 
 	/**

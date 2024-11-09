@@ -3,7 +3,8 @@ package io.github.acoboh.query.filter.mongodb.exceptions;
 import org.springframework.http.HttpStatus;
 
 /**
- * Exception thrown when the field is marked as blocked and the user is trying to filter from string filters
+ * Exception thrown when the field is marked as blocked and the user is trying
+ * to filter from string filters
  *
  * @author Adrián Cobo
  * 

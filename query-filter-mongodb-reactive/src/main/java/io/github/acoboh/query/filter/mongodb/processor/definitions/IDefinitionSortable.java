@@ -14,26 +14,26 @@ public interface IDefinitionSortable {
 	 * 
 	 * @return sort paths
 	 */
-	public List<List<QFPath>> getPaths();
+	List<List<QFPath>> getPaths();
 
 	/**
 	 * Get filter name
 	 * 
 	 * @return filter name
 	 */
-	public String getFilterName();
+	String getFilterName();
 
 	/**
 	 * Get if the field is sortable
 	 * 
 	 * @return true if sortable, false otherwise
 	 */
-	public boolean isSortable();
+	boolean isSortable();
 
 	/**
 	 * Get first path mapping name
 	 * 
 	 * @return the first mapping name
 	 */
-	public String getFirstPathMappingName();
+	String getFirstPathMappingName();
 }

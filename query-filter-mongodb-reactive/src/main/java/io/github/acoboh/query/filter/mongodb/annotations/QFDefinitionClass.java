@@ -58,12 +58,13 @@ public @interface QFDefinitionClass {
 	/**
 	 * Allows the user to select a default sort parts.
 	 * <p>
-	 * If the filter is manually cleared or manipulated with other sorting options, this default sorting options will be ignored
+	 * If the filter is manually cleared or manipulated with other sorting options,
+	 * this default sorting options will be ignored
 	 * 
 	 * @author Adrián Cobo
 	 *
 	 */
-	public @interface QFDefaultSort {
+	@interface QFDefaultSort {
 
 		/**
 		 * Name of the property to be sorted

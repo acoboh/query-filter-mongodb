@@ -20,7 +20,8 @@ import java.lang.annotation.Target;
 public @interface QFText {
 
 	/**
-	 * Name to use in the input filter. If it is not specified, it will be used the name of the variable associated
+	 * Name to use in the input filter. If it is not specified, it will be used the
+	 * name of the variable associated
 	 *
 	 * @return name
 	 */

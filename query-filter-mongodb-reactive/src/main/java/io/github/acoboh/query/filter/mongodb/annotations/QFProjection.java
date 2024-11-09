@@ -10,12 +10,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Allows the user to create new Projection instances on a specific query filter class.
+ * Allows the user to create new Projection instances on a specific query filter
+ * class.
  * <p>
- * Now, the user use a return class of the type configured inside this annotation, the aggregate will project only the available
- * fields on the class.
+ * Now, the user use a return class of the type configured inside this
+ * annotation, the aggregate will project only the available fields on the
+ * class.
  * <p>
- * It will create a new tree of projection, so only the fields on the class and nested objects will be returned.
+ * It will create a new tree of projection, so only the fields on the class and
+ * nested objects will be returned.
  */
 @Documented
 @Retention(RUNTIME)

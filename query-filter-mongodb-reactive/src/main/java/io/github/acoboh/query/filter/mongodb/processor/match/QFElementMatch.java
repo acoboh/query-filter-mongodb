@@ -42,8 +42,6 @@ public class QFElementMatch implements QFSpecificationPart {
 	private final List<List<QFPath>> paths;
 
 	private final QFOperationEnum operation;
-	private final List<Class<?>> matchClasses;
-	private final List<Boolean> isEnumList;
 
 	private Mono<List<String>> processedValues;
 	private Flux<List<Object>> parsedValues;
@@ -68,8 +66,6 @@ public class QFElementMatch implements QFSpecificationPart {
 		formatter = definition.getDateTimeFormatter();
 
 		paths = definition.getPaths();
-		matchClasses = new ArrayList<>(paths.size());
-		isEnumList = new ArrayList<>(paths.size());
 
 		if (!definition.isSpelExpression()) {
 			initialize(null, null);
@@ -85,7 +81,7 @@ public class QFElementMatch implements QFSpecificationPart {
 	 * @return true if initialized
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public boolean initialize(SpelResolverInterface spelResolver, MultiValueMap<String, Object> context) {
+	public void initialize(SpelResolverInterface spelResolver, MultiValueMap<String, Object> context) {
 		if (definition.isSpelExpression() && !originalValues.isEmpty()) {
 			if (spelResolver == null) {
 				throw new IllegalStateException(
@@ -99,7 +95,7 @@ public class QFElementMatch implements QFSpecificationPart {
 		}
 
 		if (initialized) {
-			return true;
+			return;
 		}
 
 		if (processedValues == null) {
@@ -155,7 +151,7 @@ public class QFElementMatch implements QFSpecificationPart {
 		});
 
 		initialized = true;
-		return true;
+		return;
 
 	}
 
@@ -210,22 +206,6 @@ public class QFElementMatch implements QFSpecificationPart {
 				return ((Collection<?>) spelResolved).stream().map(Object::toString).toList();
 			} else if (String.class.equals(originalClass)) {
 				return Collections.singletonList((String) spelResolved);
-			} else if (boolean.class.equals(originalClass)) {
-				return Collections.singletonList(String.valueOf((boolean) spelResolved));
-			} else if (byte.class.equals(originalClass)) {
-				return Collections.singletonList(String.valueOf((byte) spelResolved));
-			} else if (short.class.equals(originalClass)) {
-				return Collections.singletonList(String.valueOf((short) spelResolved));
-			} else if (int.class.equals(originalClass)) {
-				return Collections.singletonList(String.valueOf((int) spelResolved));
-			} else if (long.class.equals(originalClass)) {
-				return Collections.singletonList(String.valueOf((long) spelResolved));
-			} else if (float.class.equals(originalClass)) {
-				return Collections.singletonList(String.valueOf((float) spelResolved));
-			} else if (double.class.equals(originalClass)) {
-				return Collections.singletonList(String.valueOf((double) spelResolved));
-			} else if (char.class.equals(originalClass)) {
-				return Collections.singletonList(String.valueOf((char) spelResolved));
 			}
 
 			// Primitive array copy

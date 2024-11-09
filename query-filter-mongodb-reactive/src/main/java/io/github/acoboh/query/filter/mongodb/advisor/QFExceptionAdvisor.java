@@ -61,11 +61,11 @@ public class QFExceptionAdvisor {
 	private Mono<ResponseEntity<Object>> handleAdvisorMessageResolver(ExceptionLanguageResolver resolver, Exception ex,
 			ServerWebExchange request) {
 		String message = message(resolver.getMessageCode(), resolver.getArguments());
-		return defaultErrorMessage(ex, request, resolver.getHttpStatus(), message, false);
+		return defaultErrorMessage(ex, request, resolver.getHttpStatus(), message);
 	}
 
 	private Mono<ResponseEntity<Object>> defaultErrorMessage(Exception e, ServerWebExchange request, HttpStatus status,
-			String message, boolean extend) {
+			String message) {
 
 		Map<String, Object> map = new LinkedHashMap<>(6);
 		map.put("timestamp", new Date());
@@ -74,11 +74,6 @@ public class QFExceptionAdvisor {
 		map.put("exception", e.getClass());
 		map.put("message", message);
 		map.put("path", request.getRequest().getPath().value());
-
-		if (extend && e.getCause() != null) {
-			map.put("causeClass", e.getCause().getClass());
-			map.put("causeMessage", e.getCause().getMessage());
-		}
 
 		return Mono.just(ResponseEntity.status(status).body(map));
 	}

@@ -1,7 +1,9 @@
 package io.github.acoboh.query.filter.mongodb.exceptions.definition;
 
 /**
- * Exception thrown when no {@link io.github.acoboh.query.filter.mongodb.annotations.QFDefinitionClass} annotation is present
+ * Exception thrown when no
+ * {@link io.github.acoboh.query.filter.mongodb.annotations.QFDefinitionClass}
+ * annotation is present
  *
  * @author Architecture Team
  * 

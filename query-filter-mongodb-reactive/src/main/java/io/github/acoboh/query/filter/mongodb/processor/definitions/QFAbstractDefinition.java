@@ -103,7 +103,8 @@ public class QFAbstractDefinition {
 	 * @param filterClass filter class
 	 * @param entityClass entity class
 	 * @return abstract definition
-	 * @throws QueryFilterDefinitionException if any error happens creating the definition
+	 * @throws QueryFilterDefinitionException if any error happens creating the
+	 *                                        definition
 	 */
 	public static QFAbstractDefinition buildDefinition(Field filterField, Class<?> filterClass, Class<?> entityClass)
 			throws QueryFilterDefinitionException {

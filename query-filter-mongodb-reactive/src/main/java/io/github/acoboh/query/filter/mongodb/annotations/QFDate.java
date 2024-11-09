@@ -25,15 +25,16 @@ public @interface QFDate {
 	/**
 	 * Default date time format
 	 */
-	public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+	String DEFAULT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
 	/**
 	 * Default zone offset
 	 */
-	public static final String DEFAULT_ZONEOFFSET = "UTC";
+	String DEFAULT_ZONEOFFSET = "UTC";
 
 	/**
-	 * Used to set a format time. If it is empty, a timestamp default format will be used
+	 * Used to set a format time. If it is empty, a timestamp default format will be
+	 * used
 	 *
 	 * @return Time format used
 	 */
@@ -57,13 +58,14 @@ public @interface QFDate {
 	 * Allows the user to create default parsing parts.
 	 * <p>
 	 * 
-	 * An example of usage is when the user only filter by date but the actual model field is a timestamp. With this functionality you
-	 * can set the hours, minutes and seconds of the full timestamp
+	 * An example of usage is when the user only filter by date but the actual model
+	 * field is a timestamp. With this functionality you can set the hours, minutes
+	 * and seconds of the full timestamp
 	 * 
 	 * @author Adrián Cobo
 	 *
 	 */
-	public @interface QFDateDefault {
+	@interface QFDateDefault {
 
 		/**
 		 * Chrono field

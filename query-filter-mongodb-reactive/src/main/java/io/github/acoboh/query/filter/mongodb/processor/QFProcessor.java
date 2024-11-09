@@ -241,18 +241,6 @@ public class QFProcessor<F, E> {
 		return mapProjections;
 	}
 
-//	/**
-//	 * Create a new {@linkplain QueryFilterBase} instance
-//	 *
-//	 * @param input string filter
-//	 * @param type  standard type
-//	 * @return new {@linkplain QueryFilterBase} instance
-//	 * @throws QueryFilterException if any parsing exception occurs
-//	 */
-//	public QF<E> newQueryFilter(String input, QFParamType type) throws QueryFilterException {
-//		return new QueryFilterBase<>(input, type, this);
-//	}
-
 	public QueryFilter<E> newQueryFilter(String input, QFParamType type) throws QueryFilterException {
 		return new QueryFilter<>(input, type, this);
 	}

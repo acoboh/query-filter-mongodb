@@ -16,19 +16,19 @@ public class SpelUtils {
 
 	public static void fillContextWithRequestValues(EvaluationContext context, ServerWebExchange exchange) {
 		Object pathObject = exchange.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
-		if (pathObject != null && pathObject instanceof Map<?, ?> map) {
+		if (pathObject instanceof Map<?, ?> map) {
 			context.setVariable("_pathVariables", map);
 		}
 
 		var mlMap = exchange.getRequest().getQueryParams();
 
-		Map<String, Object> queryMap = mlMap.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> {
+		Map<String, Object> queryMap = mlMap.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> {
 			if (e.getValue().size() > 1) {
 				return e.getValue().toArray(new String[0]);
 			} else if (e.getValue().size() == 1) {
 				return e.getValue().get(0);
 			}
-			return null;
+			throw new IllegalStateException("Query parameter value is empty");
 		}));
 
 		context.setVariable("_parameters", queryMap);
