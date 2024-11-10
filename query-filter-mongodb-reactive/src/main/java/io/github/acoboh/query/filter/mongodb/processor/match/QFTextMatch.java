@@ -54,7 +54,7 @@ public class QFTextMatch implements QFSpecificationPart {
 			SpelResolverInterface spelResolver) {
 		var bson = operation.generateCriteriaFilter(this, mlmap);
 		criteriaMap.computeIfAbsent(definition.getFilterName(), t -> new ArrayList<>()).add(bson);
-		return Mono.empty(); // TODO Fix
+		return Mono.empty();
 	}
 
 }

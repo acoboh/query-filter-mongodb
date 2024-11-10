@@ -64,7 +64,7 @@ class SecuritySpelResolverContext implements SpelResolverInterface {
 
 				@Override
 				public void setAuthentication(Authentication authentication) {
-
+					// Do nothing
 				}
 			}).map(ctx -> {
 				StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
