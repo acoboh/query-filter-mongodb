@@ -1,15 +1,19 @@
 package io.github.acoboh.query.filter.mongodb.exceptions;
 
+import java.io.Serial;
+
 import org.springframework.http.HttpStatus;
 
 /**
- * Exception thrown when the field is marked as blocked and the user is trying to filter from string filters
+ * Exception thrown when the field is marked as blocked and the user is trying
+ * to filter from string filters
  *
  * @author Adrián Cobo
  * 
  */
 public class QFBlockException extends QueryFilterException {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 	private static final String MESSAGE = "Field '{}' is blocked from parsing. Operation not allowed";
 

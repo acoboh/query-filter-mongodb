@@ -1,13 +1,18 @@
 package io.github.acoboh.query.filter.mongodb.exceptions.definition;
 
+import java.io.Serial;
+
 /**
- * Exception thrown when no {@link io.github.acoboh.query.filter.mongodb.annotations.QFDefinitionClass} annotation is present
+ * Exception thrown when no
+ * {@link io.github.acoboh.query.filter.mongodb.annotations.QFDefinitionClass}
+ * annotation is present
  *
  * @author Architecture Team
  * 
  */
 public class QFClassException extends QueryFilterDefinitionException {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 	private static final String MESSAGE = "Annotation {} is not present in {}";
 	private static final String CLASS = "Unexpected class {} in annotation on class {}. Expected {}";

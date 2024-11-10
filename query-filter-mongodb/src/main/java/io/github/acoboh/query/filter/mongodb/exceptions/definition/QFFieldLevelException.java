@@ -1,5 +1,7 @@
 package io.github.acoboh.query.filter.mongodb.exceptions.definition;
 
+import java.io.Serial;
+
 /**
  * Exception thrown when there is more levels access than object access
  *
@@ -8,6 +10,7 @@ package io.github.acoboh.query.filter.mongodb.exceptions.definition;
  */
 public class QFFieldLevelException extends QueryFilterDefinitionException {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 	private static final String MESSAGE = "The field '{}' can't access more levels. Last level associated is '{}'";
 

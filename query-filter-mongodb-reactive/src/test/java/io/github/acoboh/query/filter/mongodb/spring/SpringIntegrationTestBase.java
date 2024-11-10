@@ -2,7 +2,6 @@ package io.github.acoboh.query.filter.mongodb.spring;
 
 import java.util.TimeZone;
 
-import io.github.acoboh.query.filter.mongodb.SpELBeanExample;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -17,6 +16,7 @@ import org.testcontainers.junit.jupiter.Container;
 
 import com.mongodb.reactivestreams.client.MongoClients;
 
+import io.github.acoboh.query.filter.mongodb.SpELBeanExample;
 import io.github.acoboh.query.filter.mongodb.annotations.EnableQueryFilter;
 import io.github.acoboh.query.filter.mongodb.config.QueryFilterAutoconfigure;
 import io.github.acoboh.query.filter.mongodb.domain.BasicDocumentFilterDef;
@@ -41,7 +41,7 @@ public class SpringIntegrationTestBase {
 		}
 
 		@Bean
-		ReactiveMongoTemplate reactiveMongoTemplate() throws Exception {
+		ReactiveMongoTemplate reactiveMongoTemplate() {
 
 			var mongoTemplate = new ReactiveMongoTemplate(MongoClients.create(mongoContainer.getReplicaSetUrl()),
 					"test");

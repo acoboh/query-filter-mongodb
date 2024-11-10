@@ -89,7 +89,8 @@ public class AdvisorProperties {
 	/**
 	 * Set if the message source use code as default message
 	 *
-	 * @param messageSourceUseCodeAsDefaultMessage if the message source use code as default message
+	 * @param messageSourceUseCodeAsDefaultMessage if the message source use code as
+	 *                                             default message
 	 */
 	public void setMessageSourceUseCodeAsDefaultMessage(boolean messageSourceUseCodeAsDefaultMessage) {
 		this.messageSourceUseCodeAsDefaultMessage = messageSourceUseCodeAsDefaultMessage;

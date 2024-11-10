@@ -1,5 +1,7 @@
 package io.github.acoboh.query.filter.mongodb.exceptions.definition;
 
+import java.io.Serial;
+
 import org.slf4j.helpers.MessageFormatter;
 
 /**
@@ -10,6 +12,7 @@ import org.slf4j.helpers.MessageFormatter;
  */
 public class QueryFilterDefinitionException extends Exception {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	/**

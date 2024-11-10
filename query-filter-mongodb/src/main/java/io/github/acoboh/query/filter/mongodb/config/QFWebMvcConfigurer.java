@@ -12,7 +12,8 @@ import io.github.acoboh.query.filter.mongodb.converters.QFCustomConverter;
 import io.github.acoboh.query.filter.mongodb.processor.QFProcessor;
 
 /**
- * Class to enable custom converters for Spring Boot Controllers via {@linkplain WebMvcConfigurer} converters
+ * Class to enable custom converters for Spring Boot Controllers via
+ * {@linkplain WebMvcConfigurer} converters
  *
  * @author Adrián Cobo
  * 

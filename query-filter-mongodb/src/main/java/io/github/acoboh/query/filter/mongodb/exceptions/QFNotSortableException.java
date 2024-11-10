@@ -1,5 +1,7 @@
 package io.github.acoboh.query.filter.mongodb.exceptions;
 
+import java.io.Serial;
+
 import org.springframework.http.HttpStatus;
 
 /**
@@ -10,6 +12,7 @@ import org.springframework.http.HttpStatus;
  */
 public class QFNotSortableException extends QueryFilterException {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 	private static final String MESSAGE = "The field '{}' is not sortable";
 

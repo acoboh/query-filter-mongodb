@@ -78,7 +78,6 @@ public class QFElementMatch implements QFSpecificationPart {
 	 * 
 	 * @param spelResolver bean to resolve SpEL expressions
 	 * @param context      context to resolve SpEL expressions
-	 * @return true if initialized
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void initialize(SpelResolverInterface spelResolver, MultiValueMap<String, Object> context) {
@@ -151,7 +150,6 @@ public class QFElementMatch implements QFSpecificationPart {
 		});
 
 		initialized = true;
-		return;
 
 	}
 
@@ -297,7 +295,7 @@ public class QFElementMatch implements QFSpecificationPart {
 	/**
 	 * Get if the matching element must be evaluated
 	 *
-	 * @return true if it must be evaluated
+	 * @return array if it must be evaluated
 	 */
 	public Mono<Boolean> needToEvaluate() {
 		if (!initialized) {

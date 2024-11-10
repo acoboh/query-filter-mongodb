@@ -1,5 +1,7 @@
 package io.github.acoboh.query.filter.mongodb.exceptions;
 
+import java.io.Serial;
+
 import org.springframework.http.HttpStatus;
 
 import io.github.acoboh.query.filter.mongodb.operations.QFOperationEnum;
@@ -12,6 +14,7 @@ import io.github.acoboh.query.filter.mongodb.operations.QFOperationEnum;
  */
 public class QFFieldOperationException extends QueryFilterException {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private static final String MESSAGE = "Operation {} is not valid for field '{}' ";

@@ -20,7 +20,7 @@ public @interface EnableQueryFilter {
 	 * Base package names to find classes with {@linkplain QFDefinitionClass}
 	 * annotations
 	 * 
-	 * @return list of packages to search
+	 * @return array of packages to search
 	 */
 	String[] basePackages() default {};
 
@@ -28,7 +28,7 @@ public @interface EnableQueryFilter {
 	 * Base package classes to find classes with {@linkplain QFDefinitionClass}
 	 * annotations
 	 * 
-	 * @return list of package classes to search
+	 * @return array of package classes to search
 	 */
 	Class<?>[] basePackageClasses() default {};
 

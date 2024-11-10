@@ -3,6 +3,7 @@ package io.github.acoboh.query.filter.mongodb.spel;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.PropertyValue;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
@@ -70,13 +71,13 @@ public abstract class SpelResolverContext {
 	private void fillContextWithRequestValues(EvaluationContext context, HttpServletRequest request) {
 
 		Object pathObject = request.getAttribute(View.PATH_VARIABLES);
-		if (pathObject != null && pathObject instanceof Map<?, ?> map) {
+		if (pathObject instanceof Map<?, ?> map) {
 			context.setVariable("_pathVariables", map);
 		}
 
 		var properties = new ServletRequestParameterPropertyValues(request);
 		Map<String, Object> requestParams = properties.getPropertyValueList().stream()
-				.collect(Collectors.toMap(e -> e.getName(), e -> e.getValue()));
+				.collect(Collectors.toMap(PropertyValue::getName, PropertyValue::getValue));
 
 		context.setVariable("_parameters", requestParams);
 	}

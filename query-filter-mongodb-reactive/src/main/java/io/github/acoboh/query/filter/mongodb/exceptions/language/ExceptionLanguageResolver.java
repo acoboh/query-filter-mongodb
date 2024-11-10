@@ -20,7 +20,7 @@ public interface ExceptionLanguageResolver {
 	/**
 	 * List of arguments to be resolved on the message code
 	 *
-	 * @return list of arguments
+	 * @return array of arguments
 	 */
 	Object[] getArguments();
 

@@ -254,7 +254,7 @@ Following the OpenAPI documentation, you have several options to filter on each 
 - **lte**: Less or equal than
 - **like**: Like _(for string operations)_
 - **starts**: Starts with _(for string operations)_
-- **ends**: Ends with _(for string opertions)_
+- **ends**: Ends with _(for string operations)_
 - **in**: IN (in operator)
 - **nin**: Not IN (not it operator)
 - **null**: Is null (is null or is not null. The value must be `false` or `true`)

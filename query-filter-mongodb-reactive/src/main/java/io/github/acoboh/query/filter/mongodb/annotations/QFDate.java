@@ -50,7 +50,7 @@ public @interface QFDate {
 	/**
 	 * Default parts of date for default formating
 	 * 
-	 * @return list of date parts
+	 * @return array of date parts
 	 */
 	QFDateDefault[] parseDefaulting() default {};
 

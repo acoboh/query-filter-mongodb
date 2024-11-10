@@ -1,5 +1,7 @@
 package io.github.acoboh.query.filter.mongodb.exceptions;
 
+import java.io.Serial;
+
 import org.slf4j.helpers.MessageFormatter;
 
 import io.github.acoboh.query.filter.mongodb.exceptions.language.ExceptionLanguageResolver;
@@ -12,6 +14,7 @@ import io.github.acoboh.query.filter.mongodb.exceptions.language.ExceptionLangua
  */
 public abstract class QueryFilterException extends RuntimeException implements ExceptionLanguageResolver {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	/**

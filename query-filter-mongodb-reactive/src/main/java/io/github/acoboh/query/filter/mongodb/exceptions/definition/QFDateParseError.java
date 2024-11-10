@@ -1,5 +1,6 @@
 package io.github.acoboh.query.filter.mongodb.exceptions.definition;
 
+import java.io.Serial;
 import java.time.format.DateTimeParseException;
 
 /**
@@ -10,6 +11,7 @@ import java.time.format.DateTimeParseException;
  */
 public class QFDateParseError extends QueryFilterDefinitionException {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private static final String MESSAGE = "The format '{}' is not valid for class '{}'. Please check logs";

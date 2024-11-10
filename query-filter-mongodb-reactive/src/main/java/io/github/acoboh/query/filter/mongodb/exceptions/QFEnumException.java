@@ -1,5 +1,6 @@
 package io.github.acoboh.query.filter.mongodb.exceptions;
 
+import java.io.Serial;
 import java.util.Arrays;
 
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
  */
 public class QFEnumException extends QueryFilterException {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 	private static final String MESSAGE = "Failed to parse field '{}' with value '{}' to enum class '{}'. Allowed values {}";
 

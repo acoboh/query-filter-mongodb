@@ -47,7 +47,6 @@ class SecuritySpelResolverContext extends SpelResolverContext {
 	private static SecurityExpressionHandler<FilterInvocation> getFilterSecurityHandler(
 			List<SecurityExpressionHandler<?>> securityExpressionHandlers) {
 
-
 		if (CollectionUtils.isEmpty(securityExpressionHandlers)) {
 			LOGGER.warn("No security expression handlers found. Default expression handler will be used.");
 			return null;

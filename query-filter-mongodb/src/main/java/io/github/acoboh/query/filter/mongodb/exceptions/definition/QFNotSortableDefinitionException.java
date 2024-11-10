@@ -1,13 +1,17 @@
 package io.github.acoboh.query.filter.mongodb.exceptions.definition;
 
+import java.io.Serial;
+
 /**
- * Exception thrown if any element is used on default sorting options and the element is not sortable
+ * Exception thrown if any element is used on default sorting options and the
+ * element is not sortable
  * 
  * @author Adrián Cobo
  *
  */
 public class QFNotSortableDefinitionException extends QueryFilterDefinitionException {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	/**

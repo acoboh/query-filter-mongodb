@@ -1,5 +1,7 @@
 package io.github.acoboh.query.filter.mongodb.exceptions;
 
+import java.io.Serial;
+
 import org.springframework.http.HttpStatus;
 
 /**
@@ -11,6 +13,7 @@ import org.springframework.http.HttpStatus;
  */
 public class QFBlockException extends QueryFilterException {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 	private static final String MESSAGE = "Field '{}' is blocked from parsing. Operation not allowed";
 

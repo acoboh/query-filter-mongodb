@@ -32,7 +32,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import io.github.acoboh.query.filter.mongodb.annotations.QFDefinitionClass;
 import io.github.acoboh.query.filter.mongodb.exceptions.QFBlockException;
 import io.github.acoboh.query.filter.mongodb.exceptions.QFDiscriminatorNotFoundException;
 import io.github.acoboh.query.filter.mongodb.exceptions.QFFieldNotFoundException;
@@ -77,8 +76,6 @@ public class QueryFilter<E> {
 
 	private final Map<String, QFAbstractDefinition> definitionMap;
 
-	private final QFDefinitionClass queryFilterClassAnnotation;
-
 	private boolean defaultSortEnabled = true;
 
 	private final Class<E> entityClass;
@@ -105,7 +102,6 @@ public class QueryFilter<E> {
 		Assert.notNull(type, "type cannot be null");
 
 		this.definitionMap = processor.getDefinitionMap();
-		this.queryFilterClassAnnotation = processor.getDefinitionClassAnnotation();
 		this.mapProjections = processor.getMapProjections();
 
 		this.specificationsWarp = new QFSpecificationsWrap(processor.getDefaultMatches());

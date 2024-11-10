@@ -1,5 +1,7 @@
 package io.github.acoboh.query.filter.mongodb.exceptions.definition;
 
+import java.io.Serial;
+
 /**
  * Exception thrown when the date class is not supported
  *
@@ -8,6 +10,7 @@ package io.github.acoboh.query.filter.mongodb.exceptions.definition;
  */
 public class QFDateClassNotSupported extends QueryFilterDefinitionException {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 	private static final String MESSAGE = "Class '{}' is not supported as date on field '{}'";
 

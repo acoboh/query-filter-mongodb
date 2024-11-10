@@ -1,5 +1,7 @@
 package io.github.acoboh.query.filter.mongodb.exceptions.definition;
 
+import java.io.Serial;
+
 /**
  * Exception when type parsing failed
  *
@@ -8,6 +10,7 @@ package io.github.acoboh.query.filter.mongodb.exceptions.definition;
  */
 public class QFTypeException extends QueryFilterDefinitionException {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 	private static final String MESSAGE = "The field '{}' can not be parsed. {}";
 

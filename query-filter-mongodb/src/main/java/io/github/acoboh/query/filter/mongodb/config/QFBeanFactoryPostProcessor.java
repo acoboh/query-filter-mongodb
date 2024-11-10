@@ -3,10 +3,8 @@ package io.github.acoboh.query.filter.mongodb.config;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -61,7 +59,7 @@ public class QFBeanFactoryPostProcessor
 		this.applicationContext = applicationContext;
 	}
 
-	private static Set<Class<?>> getClassAnnotated(List<String> packages, Class<? extends Annotation> annotation) {
+	private static Set<Class<?>> getClassAnnotated(List<String> packages) {
 
 		Assert.notNull(packages, "packages must not be null");
 
@@ -85,7 +83,7 @@ public class QFBeanFactoryPostProcessor
 				return matches;
 			}));
 
-			Set<Class<?>> classFound = reflect.getTypesAnnotatedWith(annotation);
+			Set<Class<?>> classFound = reflect.getTypesAnnotatedWith(QFDefinitionClass.class);
 
 			LOGGER.info("Found {} classes on package {}", classFound.size(), pack);
 
@@ -211,18 +209,15 @@ public class QFBeanFactoryPostProcessor
 		if (packagesToAnalyze.isEmpty()) {
 			LOGGER.debug("Trying get SpringBootApplication beans to search for QueryFilter classes...");
 			packagesToAnalyze = getBeansWithAnnotation(SpringBootApplication.class, false,
-					(scan, instance) -> Arrays.asList(instance.getClass().toString()));
+					(scan, instance) -> List.of(instance.getClass().toString()));
 
 		}
 
-		Set<Class<?>> classSet = getClassAnnotated(packagesToAnalyze, QFDefinitionClass.class);
-
-		Map<Class<?>, QFProcessor<?, ?>> mapProcessors = new HashMap<>();
+		Set<Class<?>> classSet = getClassAnnotated(packagesToAnalyze);
 
 		for (Class<?> cl : classSet) {
 			try {
-				QFProcessor<?, ?> qfp = registerQueryFilterClass(cl, registry);
-				mapProcessors.put(cl, qfp);
+				registerQueryFilterClass(cl, registry);
 			} catch (QueryFilterDefinitionException e) {
 				throw new BeanCreationException("Error creating bean query filter", e);
 			}

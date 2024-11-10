@@ -31,3 +31,5 @@ target/
 *.iml
 
 .factorypath
+
+.sonarlint/connectedMode.json

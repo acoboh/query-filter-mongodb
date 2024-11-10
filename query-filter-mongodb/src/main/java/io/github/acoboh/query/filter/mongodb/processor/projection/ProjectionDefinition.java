@@ -35,7 +35,7 @@ public class ProjectionDefinition {
 
 		var fieldsList = getAllFieldNames(returnType, "");
 
-		var fields = fieldsList.toArray(new String[fieldsList.size()]);
+		var fields = fieldsList.toArray(new String[0]);
 
 		var fieldsAggregation = Fields.from();
 		for (var f : fields) {

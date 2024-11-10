@@ -1,5 +1,7 @@
 package io.github.acoboh.query.filter.mongodb.exceptions;
 
+import java.io.Serial;
+
 import org.springframework.http.HttpStatus;
 
 /**
@@ -12,6 +14,7 @@ public class QFParseException extends QueryFilterException {
 
 	private static final String MESSAGE = "Field '{}' can not be parse to QueryFilter from '{}'";
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private final String input;

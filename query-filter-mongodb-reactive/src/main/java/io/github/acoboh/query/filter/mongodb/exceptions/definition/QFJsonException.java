@@ -1,5 +1,7 @@
 package io.github.acoboh.query.filter.mongodb.exceptions.definition;
 
+import java.io.Serial;
+
 /**
  * Exception thrown when any error about JSON element definition happens
  *
@@ -7,6 +9,7 @@ package io.github.acoboh.query.filter.mongodb.exceptions.definition;
  */
 public class QFJsonException extends QueryFilterDefinitionException {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	/**
