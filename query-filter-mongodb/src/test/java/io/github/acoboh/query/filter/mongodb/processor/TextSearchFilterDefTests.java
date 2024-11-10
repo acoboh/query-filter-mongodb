@@ -25,9 +25,9 @@ import io.github.acoboh.query.filter.mongodb.spring.SpringIntegrationTestBase;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class TextSearchFilterDefTests {
 
-	private static TextDocument DOC_1 = new TextDocument();
-	private static TextDocument DOC_2 = new TextDocument();
-	private static TextDocument DOC_3 = new TextDocument();
+	private static final TextDocument DOC_1 = new TextDocument();
+	private static final TextDocument DOC_2 = new TextDocument();
+	private static final TextDocument DOC_3 = new TextDocument();
 
 	static {
 		DOC_1.setName("John");

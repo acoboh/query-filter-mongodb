@@ -40,7 +40,7 @@ public class SpringIntegrationTestBase {
 		}
 
 		@Bean
-		MongoTemplate mongoTemplate() throws Exception {
+		MongoTemplate mongoTemplate() {
 			var mongoTemplate = new MongoTemplate(MongoClients.create(mongoContainer.getReplicaSetUrl()), "test");
 			initIndexes(mongoTemplate);
 			return mongoTemplate;

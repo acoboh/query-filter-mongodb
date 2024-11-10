@@ -20,7 +20,8 @@ import io.github.acoboh.query.filter.mongodb.annotations.QFProjection;
 /**
  * Class that allows support for Spring Native projects
  * 
- * @see <a href="https://github.com/acoboh/query-filter-mongodb/wiki">Official Wiki</a>
+ * @see <a href="https://github.com/acoboh/query-filter-mongodb/wiki">Official
+ *      Wiki</a>
  */
 @Configuration
 @ImportRuntimeHints(HintsRegistrarDef.QFRuntimeHintsRegistrar.class)

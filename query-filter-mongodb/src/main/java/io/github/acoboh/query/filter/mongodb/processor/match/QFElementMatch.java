@@ -42,13 +42,11 @@ public class QFElementMatch implements QFSpecificationPart {
 	private final List<List<QFPath>> paths;
 
 	private final QFOperationEnum operation;
-	private final List<Class<?>> matchClasses;
-	private final List<Boolean> isEnumList;
 
 	private List<String> processedValues;
 	private List<List<Object>> parsedValues;
 
-	private DateTimeFormatter formatter;
+	private final DateTimeFormatter formatter;
 
 	private boolean initialized = false;
 
@@ -68,8 +66,6 @@ public class QFElementMatch implements QFSpecificationPart {
 		formatter = definition.getDateTimeFormatter();
 
 		paths = definition.getPaths();
-		matchClasses = new ArrayList<>(paths.size());
-		isEnumList = new ArrayList<>(paths.size());
 
 		if (!definition.isSpelExpression()) {
 			initialize(null, null, null, null);
@@ -87,7 +83,7 @@ public class QFElementMatch implements QFSpecificationPart {
 	 * @return true if initialized
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public boolean initialize(SpelResolverContext spelResolver, MultiValueMap<String, Object> context,
+	public void initialize(SpelResolverContext spelResolver, MultiValueMap<String, Object> context,
 			HttpServletRequest request, HttpServletResponse response) {
 		if (definition.isSpelExpression() && !originalValues.isEmpty()) {
 			if (spelResolver == null) {
@@ -102,7 +98,7 @@ public class QFElementMatch implements QFSpecificationPart {
 		}
 
 		if (initialized) {
-			return true;
+			return;
 		}
 
 		if (processedValues == null) {
@@ -119,11 +115,8 @@ public class QFElementMatch implements QFSpecificationPart {
 			// Check operation
 			checkOperation(finalClass);
 
-			matchClasses.add(finalClass);
-
 			// Check if an enum
 			boolean isEnum = lastPath.getType() == QFElementDefType.ENUM;
-			isEnumList.add(isEnum);
 
 			List<Object> parsedPathValue = new ArrayList<>(processedValues.size());
 			for (String val : processedValues) {
@@ -165,7 +158,6 @@ public class QFElementMatch implements QFSpecificationPart {
 		}
 
 		initialized = true;
-		return true;
 
 	}
 
@@ -219,25 +211,19 @@ public class QFElementMatch implements QFSpecificationPart {
 			return ((Collection<?>) spelResolved).stream().map(Object::toString).toList();
 		} else if (String.class.equals(originalClass)) {
 			return Collections.singletonList((String) spelResolved);
-		} else if (boolean.class.equals(originalClass)) {
-			return Collections.singletonList(String.valueOf((boolean) spelResolved));
-		} else if (byte.class.equals(originalClass)) {
-			return Collections.singletonList(String.valueOf((byte) spelResolved));
-		} else if (short.class.equals(originalClass)) {
-			return Collections.singletonList(String.valueOf((short) spelResolved));
-		} else if (int.class.equals(originalClass)) {
-			return Collections.singletonList(String.valueOf((int) spelResolved));
-		} else if (long.class.equals(originalClass)) {
-			return Collections.singletonList(String.valueOf((long) spelResolved));
-		} else if (float.class.equals(originalClass)) {
-			return Collections.singletonList(String.valueOf((float) spelResolved));
-		} else if (double.class.equals(originalClass)) {
-			return Collections.singletonList(String.valueOf((double) spelResolved));
-		} else if (char.class.equals(originalClass)) {
-			return Collections.singletonList(String.valueOf((char) spelResolved));
 		}
 
 		// Primitive array copy
+		List<String> retList = getStrings(spelResolved, originalClass);
+
+		if (retList != null) {
+			return retList;
+		}
+
+		return Collections.singletonList(spelResolved.toString());
+	}
+
+	private static List<String> getStrings(Object spelResolved, Class<?> originalClass) {
 		List<String> retList = null;
 		if (boolean[].class.equals(originalClass)) {
 			boolean[] fromArray = (boolean[]) spelResolved;
@@ -295,12 +281,7 @@ public class QFElementMatch implements QFSpecificationPart {
 				retList.add(String.valueOf(c));
 			}
 		}
-
-		if (retList != null) {
-			return retList;
-		}
-
-		return Collections.singletonList(spelResolved.toString());
+		return retList;
 	}
 
 	/**

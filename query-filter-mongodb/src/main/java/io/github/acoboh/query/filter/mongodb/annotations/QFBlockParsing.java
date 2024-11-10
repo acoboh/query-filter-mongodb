@@ -10,8 +10,10 @@ import java.lang.annotation.Target;
 /**
  * Used to force hide from parsing phase.
  * <p>
- * You can specify internal parsing like roles or administrator fields you do not want to set visible for external usage. After
- * the creation, you can add the field with methods of class {@link io.github.acoboh.query.filter.mongodb.processor.QueryFilter}
+ * You can specify internal parsing like roles or administrator fields you do
+ * not want to set visible for external usage. After the creation, you can add
+ * the field with methods of class
+ * {@link io.github.acoboh.query.filter.mongodb.processor.QueryFilter}
  * <p>
  *
  * @author Adrián Cobo

@@ -201,7 +201,12 @@ public enum QFOperationEnum implements QFOperationResolutor {
 	 *
 	 * @param value parameter value
 	 * @return operation found
-	 * @throws io.github.acoboh.query.filter.mongodb.exceptions.QFOperationNotFoundException if the operation is not found
+	 * @throws io.github.acoboh.query.filter.mongodb.exceptions.QFOperationNotFoundException if
+	 *                                                                                       the
+	 *                                                                                       operation
+	 *                                                                                       is
+	 *                                                                                       not
+	 *                                                                                       found
 	 */
 	public static QFOperationEnum fromValue(String value) throws QFOperationNotFoundException {
 		QFOperationEnum constant = CONSTANTS.get(value);

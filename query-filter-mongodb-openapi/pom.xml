@@ -1,67 +1,84 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://maven.apache.org/POM/4.0.0"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>io.github.acoboh</groupId>
-		<artifactId>query-filter-mongodb-parent</artifactId>
-		<version>0.0.2</version>
-		<relativePath>../</relativePath>
-	</parent>
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.acoboh</groupId>
+        <artifactId>query-filter-mongodb-parent</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-	<artifactId>query-filter-mongodb-openapi</artifactId>
-	<packaging>jar</packaging>
+    <artifactId>query-filter-mongodb-openapi</artifactId>
+    <packaging>jar</packaging>
 
-	<name>query-filter-mongodb-openapi</name>
-	<description>Query filter MongoDB documentation OpenAPI generation for
-		Spring Boot 3.X</description>
+    <name>query-filter-mongodb-openapi</name>
+    <description>Query filter MongoDB documentation OpenAPI generation for
+        Spring Boot 3.X
+    </description>
 
-	<properties>
+    <properties>
 
-		<!-- Spring dependencies -->
-		<spring-boot.version>3.3.0</spring-boot.version>
+        <!-- Spring dependencies -->
+        <spring-boot.version>3.3.5</spring-boot.version>
 
-		<!--OpenAPI dependencies -->
-		<openapi.version>2.5.0</openapi.version>
+        <!--OpenAPI dependencies -->
+        <openapi.version>2.6.0</openapi.version>
 
-	</properties>
+    </properties>
 
-	<dependencyManagement>
-		<dependencies>
+    <dependencyManagement>
+        <dependencies>
 
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-dependencies</artifactId>
-				<version>${spring-boot.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 
-		</dependencies>
-	</dependencyManagement>
+        </dependencies>
+    </dependencyManagement>
 
-	<dependencies>
+    <dependencies>
 
-		<dependency>
-			<groupId>io.github.acoboh</groupId>
-			<artifactId>query-filter-mongodb</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>io.github.acoboh</groupId>
+            <artifactId>query-filter-mongodb</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
+        <dependency>
+            <groupId>io.github.acoboh</groupId>
+            <artifactId>query-filter-mongodb-reactive</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<scope>provided</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>${openapi.version}</version>
-			<scope>provided</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${openapi.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
 
-	</dependencies>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
+            <version>${openapi.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+
+    </dependencies>
 
 </project>

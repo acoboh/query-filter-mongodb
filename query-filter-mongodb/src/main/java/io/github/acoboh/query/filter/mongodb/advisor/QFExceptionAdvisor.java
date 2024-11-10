@@ -19,7 +19,8 @@ import io.github.acoboh.query.filter.mongodb.properties.QueryFilterProperties;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
- * Class with {@linkplain ControllerAdvice} annotation for multi-language exception support
+ * Class with {@linkplain ControllerAdvice} annotation for multi-language
+ * exception support
  *
  * @author Adrián Cobo
  * 
@@ -59,11 +60,11 @@ public class QFExceptionAdvisor {
 	private ResponseEntity<Object> handleAdvisorMessageResolver(ExceptionLanguageResolver resolver, Exception ex,
 			HttpServletRequest request) {
 		String message = message(resolver.getMessageCode(), resolver.getArguments());
-		return defaultErrorMessage(ex, request, resolver.getHttpStatus(), message, false);
+		return defaultErrorMessage(ex, request, resolver.getHttpStatus(), message);
 	}
 
 	private ResponseEntity<Object> defaultErrorMessage(Exception e, HttpServletRequest request, HttpStatus status,
-			String message, boolean extend) {
+			String message) {
 
 		Map<String, Object> map = new LinkedHashMap<>(6);
 		map.put("timestamp", new Date());
@@ -72,11 +73,6 @@ public class QFExceptionAdvisor {
 		map.put("exception", e.getClass());
 		map.put("message", message);
 		map.put("path", request.getRequestURI());
-
-		if (extend && e.getCause() != null) {
-			map.put("causeClass", e.getCause().getClass());
-			map.put("causeMessage", e.getCause().getMessage());
-		}
 
 		return ResponseEntity.status(status).body(map);
 	}

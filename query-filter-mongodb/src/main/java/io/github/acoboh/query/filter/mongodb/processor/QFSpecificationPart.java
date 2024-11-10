@@ -25,7 +25,7 @@ public interface QFSpecificationPart {
 	 * @param request      HTTP request
 	 * @param response     HTTP response
 	 */
-	public void processPart(Map<String, List<Criteria>> criteriaMap, MultiValueMap<String, Object> mlmap,
+	void processPart(Map<String, List<Criteria>> criteriaMap, MultiValueMap<String, Object> mlmap,
 			SpelResolverContext spelResolver, HttpServletRequest request, HttpServletResponse response);
 
 	/**
@@ -33,6 +33,6 @@ public interface QFSpecificationPart {
 	 * 
 	 * @return definition
 	 */
-	public QFAbstractDefinition getDefinition();
+	QFAbstractDefinition getDefinition();
 
 }

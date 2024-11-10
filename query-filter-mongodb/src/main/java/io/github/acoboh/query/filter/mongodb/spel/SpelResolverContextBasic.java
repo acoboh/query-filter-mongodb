@@ -1,6 +1,8 @@
 package io.github.acoboh.query.filter.mongodb.spel;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.expression.BeanFactoryResolver;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -20,15 +22,11 @@ import jakarta.servlet.http.HttpServletResponse;
 @ConditionalOnMissingClass("org.springframework.security.access.expression.SecurityExpressionHandler")
 class SpelResolverContextBasic extends SpelResolverContext {
 
-//	/**
-//	 * Default constructor
-//	 * 
-//	 * @param request  request
-//	 * @param response response
-//	 */
-//	public SpelResolverContextBasic(HttpServletRequest request, HttpServletResponse response) {
-////		super(request, response);
-//	}
+	private final ApplicationContext applicationContext;
+
+	public SpelResolverContextBasic(ApplicationContext appContext) {
+		applicationContext = appContext;
+	}
 
 	@Override
 	public ExpressionParser getExpressionParser() {
@@ -37,7 +35,9 @@ class SpelResolverContextBasic extends SpelResolverContext {
 
 	@Override
 	public EvaluationContext getEvaluationContext(HttpServletRequest request, HttpServletResponse response) {
-		return new StandardEvaluationContext();
+		var toRet = new StandardEvaluationContext();
+		toRet.setBeanResolver(new BeanFactoryResolver(applicationContext));
+		return toRet;
 	}
 
 }
