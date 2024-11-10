@@ -2,6 +2,7 @@ package io.github.acoboh.query.filter.mongodb.spring;
 
 import java.util.TimeZone;
 
+import io.github.acoboh.query.filter.mongodb.SpELBeanExample;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -59,6 +60,11 @@ public class SpringIntegrationTestBase {
 			TextIndexDefinition textIndex = new TextIndexDefinitionBuilder().onField("name").onField("surname").build();
 
 			indexOps.ensureIndex(textIndex).block();
+		}
+
+		@Bean("customBean")
+		public SpELBeanExample spELBeanExample() {
+			return () -> "Hello World";
 		}
 
 	}

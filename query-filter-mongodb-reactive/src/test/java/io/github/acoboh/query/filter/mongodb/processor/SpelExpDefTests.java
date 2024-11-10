@@ -18,6 +18,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import io.github.acoboh.query.filter.mongodb.domain.PostBlogSpelBeanFilterDef;
 import io.github.acoboh.query.filter.mongodb.domain.PostBlogSpelFilterDef;
 import io.github.acoboh.query.filter.mongodb.model.CommentModel;
 import io.github.acoboh.query.filter.mongodb.model.PostBlogDocument;
@@ -37,7 +38,7 @@ class SpelExpDefTests {
 	static {
 		DOC_1.setId("1");
 		DOC_1.setTitle("Title 1 - Doc 1 example");
-		DOC_1.setContent("Content 1");
+		DOC_1.setContent("Content 1 Hello World! ");
 		DOC_1.setDate(LocalDateTime.of(2023, 1, 1, 0, 0, 0));
 		DOC_1.setTags(new String[] { "tag1", "tag2", "common" });
 		DOC_1.setLikes(4);
@@ -63,7 +64,7 @@ class SpelExpDefTests {
 
 		DOC_2.setId("2");
 		DOC_2.setTitle("Title 2 - Other example 2");
-		DOC_2.setContent("Content 2");
+		DOC_2.setContent("Content 2 with some text");
 		DOC_2.setDate(LocalDateTime.of(2024, 1, 1, 0, 0, 0));
 		DOC_2.setTags(new String[] { "tag3", "tag4", "common" });
 		DOC_2.setLikes(10);
@@ -90,6 +91,9 @@ class SpelExpDefTests {
 
 	@Autowired
 	private QFProcessor<PostBlogSpelFilterDef, PostBlogDocument> qfProcessor;
+
+	@Autowired
+	private QFProcessor<PostBlogSpelBeanFilterDef, PostBlogDocument> qfBeanProcessor;
 
 	@Autowired
 	private PostBlogDocumentRepository repository;
@@ -132,6 +136,19 @@ class SpelExpDefTests {
 
 		var blogList = qf.executeFindQuery();
 		StepVerifier.create(blogList).expectNextCount(0).verifyComplete();
+
+	}
+
+	@Test
+	@DisplayName("3. Test default SpEL expression with bean")
+	@Order(3)
+	void testDefaultSpELExpressionWithBean() {
+
+		var qf = qfBeanProcessor.newQueryFilter("", QFParamType.RHS_COLON);
+		assertThat(qf).isNotNull();
+
+		var blogList = qf.executeFindQuery();
+		StepVerifier.create(blogList).expectNext(DOC_1).expectNext();
 
 	}
 

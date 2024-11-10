@@ -21,29 +21,6 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 public abstract class SpelResolverContext {
 
-//	/**
-//	 * Http servlet request parameter
-//	 */
-//	@Autowired
-//	protected HttpServletRequest request;
-//
-//	/**
-//	 * Http servlet response parameter
-//	 */
-//	@Autowired
-//	protected HttpServletResponse response;
-
-//	/**
-//	 * Default constructor
-//	 *
-//	 * @param request  the servlet request
-//	 * @param response the servlet response
-//	 */
-//	protected SpelResolverContext(HttpServletRequest request, HttpServletResponse response) {
-//		this.request = request;
-//		this.response = response;
-//	}
-
 	/**
 	 * Evaluate any expression
 	 *
