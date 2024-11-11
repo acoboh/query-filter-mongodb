@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
-import org.springframework.web.reactive.config.WebFluxConfigurationSupport;
+import org.springframework.web.reactive.config.EnableWebFlux;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 
 import io.github.acoboh.query.filter.mongodb.converters.QFCustomConverter;
@@ -20,7 +20,8 @@ import io.github.acoboh.query.filter.mongodb.processor.QFProcessor;
  * 
  */
 @Configuration
-public class QFWebFluxConfigurer extends WebFluxConfigurationSupport {
+@EnableWebFlux
+public class QFWebFluxConfigurer implements WebFluxConfigurer {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(QFWebFluxConfigurer.class);
 
@@ -36,4 +37,5 @@ public class QFWebFluxConfigurer extends WebFluxConfigurationSupport {
 		LOGGER.info("Using QueryFilterWebMvcConfigurer. Registering custom formatters");
 		registry.addConverter(new QFCustomConverter(processors));
 	}
+
 }
