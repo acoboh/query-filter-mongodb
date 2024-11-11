@@ -1,0 +1,14 @@
+spring:
+  data:
+    mongodb:
+      authentication-database: admin
+      database: acoboh
+      username: root
+      password: example
+      host: localhost
+      port: 27017
+      auto-index-creation: true
+      
+logging:
+  level:
+    io.github.acoboh: trace

@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Scope;
 import org.springframework.context.expression.BeanFactoryResolver;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
@@ -24,7 +23,6 @@ import reactor.core.publisher.Mono;
  * 
  */
 @Component
-@Scope("request")
 @ConditionalOnClass(name = "org.springframework.security.access.expression.SecurityExpressionHandler")
 class SecuritySpelResolverContext implements SpelResolverInterface {
 

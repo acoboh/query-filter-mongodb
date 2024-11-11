@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Import;
  *
  */
 @AutoConfiguration
-@Import(OpenApiCustomiserImpl.class)
+@Import({ OpenApiCustomizerMvc.class, OpenApiCustomizerReactive.class })
 public class QueryFilterOpenApiAutoconfigurer {
 
 }
