@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -53,7 +54,12 @@ public class QueryFilter<E> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(QueryFilter.class);
 
+	private static final String FIELD_NOT_NULL_MESSAGE = "field cannot be null";
+	private static final String OPERATION_NOT_NULL_MESSAGE = "operation cannot be null";
+	private static final String VALUES_NOT_NULL_MESSAGE = "values cannot be null";
+
 	private static final Pattern REGEX_PATTERN = Pattern.compile("([+-])([a-zA-Z0-9]+)");
+	private static final String LOG_FINAL_PIPELINE = "Final generated aggregate pipeline: '{}'";
 
 	private final String initialInput;
 
@@ -222,6 +228,256 @@ public class QueryFilter<E> {
 	}
 
 	/**
+	 * Manually adds a new operation on any field
+	 *
+	 * @param field     field of filter
+	 * @param operation operation to be applied
+	 * @param values    values to match
+	 * @throws QFFieldNotFoundException if the field is not found
+	 */
+	public void addNewField(String field, QFOperationEnum operation, List<String> values) {
+		Assert.notNull(field, FIELD_NOT_NULL_MESSAGE);
+		Assert.notNull(operation, OPERATION_NOT_NULL_MESSAGE);
+		Assert.notNull(values, VALUES_NOT_NULL_MESSAGE);
+
+		QFAbstractDefinition def = definitionMap.get(field);
+		if (def == null) {
+			throw new QFFieldNotFoundException(field);
+		}
+
+		if (!(def instanceof QFDefinitionElement)) {
+			throw new QFNotValuable(field);
+		}
+
+		specificationsWarp.addSpecification(new QFElementMatch(values, operation, (QFDefinitionElement) def));
+
+	}
+
+	/**
+	 * Manually adds a new operation on any text field
+	 *
+	 * @param field     field of filter
+	 * @param operation operation to be applied
+	 * @param value     value to match
+	 * @throws QFFieldNotFoundException if the field is not found
+	 */
+	public void addNewField(String field, QFOperationTextEnum operation, String value) {
+		Assert.notNull(field, FIELD_NOT_NULL_MESSAGE);
+		Assert.notNull(operation, OPERATION_NOT_NULL_MESSAGE);
+		Assert.notNull(value, VALUES_NOT_NULL_MESSAGE);
+
+		QFAbstractDefinition def = definitionMap.get(field);
+		if (def == null) {
+			throw new QFFieldNotFoundException(field);
+		}
+
+		if (!(def instanceof QFDefinitionText)) {
+			throw new QFNotValuable(field);
+		}
+
+		specificationsWarp.addSpecification(new QFTextMatch(value, operation, (QFDefinitionText) def));
+	}
+
+	/**
+	 * Override sort configuration
+	 *
+	 * @param field     Field name of sorting
+	 * @param direction Direction of sorting
+	 * @throws QFNotSortableException   not sortable
+	 * @throws QFFieldNotFoundException if field does not exist
+	 * @throws QFMultipleSortException  if multiple sort exists on the same field
+	 */
+	public void addSortBy(String field, Sort.Direction direction) {
+
+		Assert.notNull(field, FIELD_NOT_NULL_MESSAGE);
+		Assert.notNull(direction, "direction cannot be null");
+
+		QFAbstractDefinition def = definitionMap.get(field);
+		if (def == null) {
+			throw new QFFieldNotFoundException(field);
+		}
+
+		if (!(def instanceof IDefinitionSortable isort) || !isort.isSortable()) {
+			throw new QFNotSortableException(field);
+		}
+
+		if (this.sortDefinitionList.stream().anyMatch(e -> e.getFirst().getFilterName().equals(field))) {
+			throw new QFMultipleSortException(field);
+		}
+
+		this.sortDefinitionList.add(Pair.of((IDefinitionSortable) def, direction));
+		this.defaultSortEnabled = false;
+
+	}
+
+	/**
+	 * Remove the actual sort configuration
+	 */
+	public void clearSort() {
+		this.defaultSortEnabled = false;
+		this.sortDefinitionList.clear();
+	}
+
+	/**
+	 * Get if any sort filter is applied
+	 *
+	 * @return true if any sort is applied, false otherwise
+	 */
+	public boolean isSorted() {
+		List<Pair<IDefinitionSortable, Sort.Direction>> list = defaultSortEnabled ? defaultSorting : sortDefinitionList;
+		return !list.isEmpty();
+	}
+
+	/**
+	 * Get all the sort fields
+	 *
+	 * @return list of a pair of sorting fields
+	 */
+	public List<Pair<String, Sort.Direction>> getSortFields() {
+		List<Pair<IDefinitionSortable, Sort.Direction>> list = defaultSortEnabled ? defaultSorting : sortDefinitionList;
+		return list.stream().map(e -> Pair.of(e.getFirst().getFilterName(), e.getSecond()))
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 * Get if the filter is sorted by the selected field
+	 *
+	 * @param field field to check
+	 * @return true if is actually sorting, false otherwise
+	 */
+	public boolean isSortedBy(String field) {
+		List<Pair<IDefinitionSortable, Sort.Direction>> list = defaultSortEnabled ? defaultSorting : sortDefinitionList;
+		return list.stream().anyMatch(e -> e.getFirst().getFilterName().equals(field));
+	}
+
+	/**
+	 * Check if the field is currently used for filtering
+	 *
+	 * @param field Filter name to check
+	 * @return true if the field is present, false otherwise
+	 */
+	public boolean isFiltering(String field) {
+		return specificationsWarp.getAllParts().stream().anyMatch(e -> e.getDefinition().getFilterName().equals(field));
+	}
+
+	/**
+	 * Check if any of the fields is are currently used for filtering
+	 *
+	 * @param fields Filter names to be checked
+	 * @return true, if any of the fields are present, false is all of them are
+	 *         actually missing
+	 */
+	public boolean isFilteringAny(String... fields) {
+		Set<String> set = Set.of(fields);
+		return specificationsWarp.getAllParts().stream().anyMatch(e -> set.contains(e.getDefinition().getFilterName()));
+	}
+
+	/**
+	 * Override any field. If not present, a new field will be created
+	 *
+	 * @param field     Field filter name
+	 * @param operation Operation to apply
+	 * @param value     value of filter
+	 * @throws QFFieldNotFoundException Missing field exception
+	 * @throws QFNotValuable            if the field is not valuable or type
+	 *                                  compatible
+	 */
+	public void overrideField(String field, QFOperationEnum operation, String value)
+			throws QFFieldNotFoundException, QFNotValuable {
+
+		Assert.notNull(field, FIELD_NOT_NULL_MESSAGE);
+		Assert.notNull(operation, OPERATION_NOT_NULL_MESSAGE);
+		Assert.notNull(value, "value cannot be null");
+
+		QFAbstractDefinition def = definitionMap.get(field);
+		if (def == null) {
+			throw new QFFieldNotFoundException(field);
+		}
+
+		if (!(def instanceof QFDefinitionElement)) {
+			throw new QFNotValuable(field);
+		}
+
+		specificationsWarp.deleteSpecificationField(field);
+		QFElementMatch match = new QFElementMatch(Arrays.asList(value.split(",")), operation,
+				(QFDefinitionElement) def);
+		specificationsWarp.addSpecification(match);
+
+	}
+
+	/**
+	 * Override any text field. If not present, a new field will be created
+	 * 
+	 * @param field     Field filter name
+	 * @param operation Operation to apply
+	 * @param value     value of filter
+	 */
+	public void overrideField(String field, QFOperationTextEnum operation, String value) {
+
+		Assert.notNull(field, FIELD_NOT_NULL_MESSAGE);
+		Assert.notNull(operation, OPERATION_NOT_NULL_MESSAGE);
+		Assert.notNull(value, "value cannot be null");
+
+		QFAbstractDefinition def = definitionMap.get(field);
+		if (def == null) {
+			throw new QFFieldNotFoundException(field);
+		}
+
+		if (!(def instanceof QFDefinitionText)) {
+			throw new QFNotValuable(field);
+		}
+
+		specificationsWarp.deleteSpecificationField(field);
+		QFTextMatch match = new QFTextMatch(value, operation, (QFDefinitionText) def);
+		specificationsWarp.addSpecification(match);
+	}
+
+	/**
+	 * Get the actual value of a field
+	 * 
+	 * @param field Field name
+	 * @return a flux of the list of values
+	 * @throws QFFieldNotFoundException if the field is not found
+	 */
+	public Flux<List<Object>> getActualValue(String field) throws QFFieldNotFoundException {
+		QFAbstractDefinition def = definitionMap.get(field);
+		if (def == null) {
+			throw new QFFieldNotFoundException(field);
+		}
+
+		var qfSpec = specificationsWarp.getAllParts().stream()
+				.filter(e -> e.getDefinition().getFilterName().equals(field)).findFirst().orElse(null);
+
+		if (qfSpec == null) {
+			return Flux.empty();
+		} else if (qfSpec instanceof QFElementMatch qfElement) {
+			return qfElement.getParsedValues();
+		} else if (qfSpec instanceof QFTextMatch qfText) {
+			return Flux.just(List.of(qfText.getValue()));
+		} else {
+			return Flux.empty();
+		}
+
+	}
+
+	/**
+	 * Delete the field of the filter
+	 *
+	 * @param field field to delete
+	 * @throws QFFieldNotFoundException if the is not present
+	 */
+	public void deleteField(String field) {
+		QFAbstractDefinition def = definitionMap.get(field);
+		if (def == null) {
+			throw new QFFieldNotFoundException(field);
+		}
+
+		specificationsWarp.deleteSpecificationField(field);
+	}
+
+	// Public query methods
+
+	/**
 	 * Create a criteria query based on the parsed filter parameters
 	 *
 	 * @return a criteria query
@@ -293,6 +549,13 @@ public class QueryFilter<E> {
 		return toCriteriaQuery(true).flatMapMany(va -> mongoTemplate.find(va, entityClass));
 	}
 
+	public Flux<E> executeFindQuery(int limit) {
+		return toCriteriaQuery(true).flatMapMany(va -> {
+			va.limit(limit);
+			return mongoTemplate.find(va, entityClass);
+		});
+	}
+
 	/**
 	 * Execute a aggregate query based on the parsed filter parameters with
 	 * pagination
@@ -301,7 +564,6 @@ public class QueryFilter<E> {
 	 * @return a page of entities
 	 */
 	public <T> Flux<T> executeAggregateAndProject(Class<T> returnType) {
-
 		return toCriteria().flatMapMany(query -> {
 			List<AggregationOperation> aggs = new ArrayList<>(3);
 
@@ -316,13 +578,36 @@ public class QueryFilter<E> {
 
 			var pipeline = Aggregation.newAggregation(aggs);
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Final generated aggregate pipeline: '{}'", pipeline);
+				LOGGER.debug(LOG_FINAL_PIPELINE, pipeline);
 			}
 
 			return mongoTemplate.aggregate(pipeline, entityClass, returnType);
 
 		});
+	}
 
+	public <T> Flux<T> executeAggregateAndProject(Class<T> returnType, int limit) {
+		return toCriteria().flatMapMany(query -> {
+			List<AggregationOperation> aggs = new ArrayList<>(4);
+
+			aggs.add(Aggregation.match(query));
+
+			var orders = getOrders();
+			if (!orders.isEmpty()) {
+				aggs.add(Aggregation.sort(Sort.by(orders)));
+			}
+
+			aggs.add(getProjectionOfClass(returnType));
+			aggs.add(Aggregation.limit(limit));
+
+			var pipeline = Aggregation.newAggregation(aggs);
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug(LOG_FINAL_PIPELINE, pipeline);
+			}
+
+			return mongoTemplate.aggregate(pipeline, entityClass, returnType);
+
+		});
 	}
 
 	/**
@@ -350,7 +635,7 @@ public class QueryFilter<E> {
 
 			var pipeline = Aggregation.newAggregation(aggs);
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Final generated aggregate pipeline: '{}'", pipeline);
+				LOGGER.debug(LOG_FINAL_PIPELINE, pipeline);
 			}
 
 			var results = mongoTemplate.aggregate(pipeline, entityClass, returnType);
@@ -388,6 +673,8 @@ public class QueryFilter<E> {
 	public Mono<Long> executeCount() {
 		return toCriteriaQuery(false).flatMap(this::executeQueryCount);
 	}
+
+	// Private util methods
 
 	private Query processSort(Query baseQuery) {
 
