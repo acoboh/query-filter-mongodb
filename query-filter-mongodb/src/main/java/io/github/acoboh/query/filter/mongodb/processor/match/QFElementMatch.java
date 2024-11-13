@@ -92,7 +92,7 @@ public class QFElementMatch implements QFSpecificationPart {
 			}
 
 			String firstValue = originalValues.get(0);
-			Object result = spelResolver.evaluate(firstValue, context, request, response);
+			Object result = spelResolver.evaluate(firstValue, context, request, response, definition.isNullOnError());
 			processedValues = parseResults(result);
 			initialized = false;
 		}

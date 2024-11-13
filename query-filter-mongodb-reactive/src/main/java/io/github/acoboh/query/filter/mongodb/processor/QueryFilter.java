@@ -489,12 +489,25 @@ public class QueryFilter<E> {
 
 		MultiValueMap<String, Object> mlmap = new LinkedMultiValueMap<>(sortedParts.size());
 
-		return Flux.fromIterable(sortedParts).flatMap(part -> // Process all parts
-		part.processPart(criteriaMap, mlmap, spelResolver)).then( // Process the final criteria
-				Mono.fromCallable(() -> parseFinalCriteria(criteriaMap)) // Final criteria processing
+		LOGGER.debug("Processing parts: {}", sortedParts);
+
+		return Flux.fromIterable(sortedParts).doOnNext(e -> LOGGER.debug("Processing part {}", e)).flatMap(part ->
+		// Process each part
+		part.processPart(criteriaMap, mlmap, spelResolver)
+		).then( // Process the final criteria
+				Mono.fromCallable(() -> parseFinalCriteria(criteriaMap)
+				) // Final criteria processing
 		).doOnSuccess(c -> {
 			if (LOGGER.isTraceEnabled()) {
 				LOGGER.trace("Final criteria {}", c.getCriteriaObject().toBsonDocument());
+			}
+		}).doOnTerminate(() -> {
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Final criteria map: {}", criteriaMap);
+			}
+		}).doOnError(e -> {
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error("Error processing criteria", e);
 			}
 		});
 	}

@@ -7,8 +7,9 @@
         </encoder>
     </appender>
 
-    <logger name="io.github.acoboh" level="DEBUG"/>
-    <logger name="org.springframework.data.mongodb.core.MongoTemplate" level="DEBUG"/>
+    <logger name="io.github.acoboh" level="TRACE"/>
+    <logger name="org.springframework.data.mongodb.core.ReactiveMongoTemplate" level="DEBUG"/>
+    <logger name="reactor" level="TRACE"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>

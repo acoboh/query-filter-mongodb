@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -20,17 +21,24 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import io.github.acoboh.query.filter.mongodb.domain.PostBlogSpelBeanFilterDef;
 import io.github.acoboh.query.filter.mongodb.domain.PostBlogSpelFilterDef;
+import io.github.acoboh.query.filter.mongodb.domain.PostBlogSpelFilterNotIgnoreDef;
 import io.github.acoboh.query.filter.mongodb.model.CommentModel;
 import io.github.acoboh.query.filter.mongodb.model.PostBlogDocument;
 import io.github.acoboh.query.filter.mongodb.repositories.PostBlogDocumentRepository;
 import io.github.acoboh.query.filter.mongodb.spring.SpringIntegrationTestBase;
+import reactor.core.publisher.SignalType;
 import reactor.test.StepVerifier;
+import reactor.test.util.TestLogger;
+import reactor.util.Logger;
+import reactor.util.Loggers;
 
 @SpringJUnitWebConfig(SpringIntegrationTestBase.Config.class)
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class SpelExpDefTests {
+
+	private static final Logger LOGGER = Loggers.getLogger(SpelExpDefTests.class);
 
 	private static final PostBlogDocument DOC_1 = new PostBlogDocument();
 	private static final PostBlogDocument DOC_2 = new PostBlogDocument();
@@ -96,6 +104,9 @@ class SpelExpDefTests {
 	private QFProcessor<PostBlogSpelBeanFilterDef, PostBlogDocument> qfBeanProcessor;
 
 	@Autowired
+	private QFProcessor<PostBlogSpelFilterNotIgnoreDef, PostBlogDocument> qfBeanNotIgnoreProcessor;
+
+	@Autowired
 	private PostBlogDocumentRepository repository;
 
 	@Test
@@ -122,7 +133,7 @@ class SpelExpDefTests {
 		assertThat(qf).isNotNull();
 
 		var blogList = qf.executeFindQuery();
-		StepVerifier.create(blogList).expectNext(DOC_1, DOC_2).expectNext();
+		StepVerifier.create(blogList).expectNext(DOC_1, DOC_2).verifyComplete();
 
 	}
 
@@ -148,7 +159,33 @@ class SpelExpDefTests {
 		assertThat(qf).isNotNull();
 
 		var blogList = qf.executeFindQuery();
-		StepVerifier.create(blogList).expectNext(DOC_1).expectNext();
+		StepVerifier.create(blogList).expectNext(DOC_1).verifyComplete();
+
+	}
+
+	@Test
+	@DisplayName("4. Test SpEL is blank")
+	@Order(4)
+	void testSpELIsBlank() {
+
+		var qf = qfProcessor.newQueryFilter("", QFParamType.RHS_COLON);
+		assertThat(qf).isNotNull();
+
+		var blogList = qf.executeFindQuery();
+		StepVerifier.create(blogList).expectNext(DOC_1, DOC_2).verifyComplete();
+
+	}
+
+	@Test
+	@DisplayName("5. Test SpEL is not ignore")
+	@Order(5)
+	void testSpELIsNotIgnore() {
+
+		var qf = qfBeanNotIgnoreProcessor.newQueryFilter("", QFParamType.RHS_COLON);
+		assertThat(qf).isNotNull();
+
+		var blogList = qf.executeFindQuery().log(LOGGER, Level.FINEST, true, SignalType.values());
+		StepVerifier.create(blogList).expectError().verify();
 
 	}
 

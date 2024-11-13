@@ -86,13 +86,6 @@ public @interface QFElement {
 	String regexOptions() default "i";
 
 	/**
-	 * If true, the queries will be created as Postgresql ARRAY[]
-	 *
-	 * @return true for Postgresql arrays, false for default format
-	 */
-	boolean arrayTyped() default false;
-
-	/**
 	 * Can resolve SpEL security expressions like:
 	 * <p>
 	 * <code>principal?.name</code>
@@ -142,10 +135,11 @@ public @interface QFElement {
 	int order() default 0;
 
 	/**
-	 * If the filter is sortable, you can active Fetch Load automatically
+	 * When the field is SpEL and the evaluation throws an exception, the field will
+	 * be replaced with null instead of throwing the exception
 	 * 
-	 * @return true if fetch is enabled
+	 * @return true if null on error is enabled
 	 */
-	boolean autoFetch() default true;
+	boolean nullOnError() default false;
 
 }

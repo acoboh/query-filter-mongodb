@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.expression.BeanFactoryResolver;
+import org.springframework.expression.EvaluationException;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.security.core.Authentication;
@@ -43,7 +44,8 @@ class SecuritySpelResolverContext implements SpelResolverInterface {
 	}
 
 	@Override
-	public Mono<Object> evaluate(String securityExpression, MultiValueMap<String, Object> contextValues) {
+	public Mono<Object> evaluate(String securityExpression, MultiValueMap<String, Object> contextValues,
+			boolean nullOnError) {
 		return Mono.deferContextual(deferContext -> {
 			// Get exchange from context
 			ServerWebExchange found = null;
@@ -64,7 +66,7 @@ class SecuritySpelResolverContext implements SpelResolverInterface {
 				public void setAuthentication(Authentication authentication) {
 					// Do nothing
 				}
-			}).map(ctx -> {
+			}).flatMap(ctx -> {
 				StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
 				if (ctx.getAuthentication() != null) {
 					evaluationContext.setRootObject(ctx.getAuthentication());
@@ -79,7 +81,25 @@ class SecuritySpelResolverContext implements SpelResolverInterface {
 				}
 
 				evaluationContext.setBeanResolver(new BeanFactoryResolver(appContext));
-				return parser.parseExpression(securityExpression).getValue(evaluationContext);
+
+				Object ret;
+				try {
+					ret = parser.parseExpression(securityExpression).getValue(evaluationContext);
+				} catch (EvaluationException e) {
+					LOGGER.trace("Error evaluating SpEL expression. Cheking if nullOnError is set '{}'", nullOnError);
+					if (nullOnError) {
+						ret = null;
+					} else {
+						LOGGER.error("Error evaluating SpEL expression", e);
+						throw e;
+					}
+				}
+
+				if (ret == null) {
+					return Mono.empty();
+				}
+
+				return Mono.just(ret);
 			});
 		});
 

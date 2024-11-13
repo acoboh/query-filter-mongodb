@@ -11,7 +11,7 @@ public class PostBlogSpelFilterDef {
 	@QFElement("likes")
 	private int likes;
 
-	@QFElement(value = "comments.likes", isSpPELExpression = true, defaultValues = "#likes * 100", defaultOperation = QFOperationEnum.GREATER_THAN, order = 10)
+	@QFElement(value = "comments.likes", isSpPELExpression = true, defaultValues = "#likes * 100", defaultOperation = QFOperationEnum.GREATER_THAN, order = 10, nullOnError = true)
 	private int commentLikes;
 
 }

@@ -8,6 +8,8 @@ public class DocumentProjectionDef {
 
 	private Inner1 inner1;
 
+	private TestENUM testENUM;
+
 	public static class Inner1 {
 
 		private String id;
@@ -24,6 +26,10 @@ public class DocumentProjectionDef {
 
 		}
 
+	}
+
+	public enum TestENUM {
+		ENUM1, ENUM2
 	}
 
 }
