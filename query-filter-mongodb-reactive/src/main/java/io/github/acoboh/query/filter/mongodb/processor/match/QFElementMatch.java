@@ -88,7 +88,7 @@ public class QFElementMatch implements QFSpecificationPart {
 			}
 
 			String firstValue = originalValues.get(0);
-			var result = spelResolver.evaluate(firstValue, context);
+			var result = spelResolver.evaluate(firstValue, context, definition.isNullOnError());
 			processedValues = parseResults(result);
 			initialized = false;
 		}
@@ -200,8 +200,8 @@ public class QFElementMatch implements QFSpecificationPart {
 
 			if (spelResolved instanceof String[] casted) {
 				return Arrays.asList(casted);
-			} else if (spelResolved instanceof Collection<?>) {
-				return ((Collection<?>) spelResolved).stream().map(Object::toString).toList();
+			} else if (spelResolved instanceof Collection<?> col) {
+				return col.stream().map(Object::toString).toList();
 			} else if (String.class.equals(originalClass)) {
 				return Collections.singletonList((String) spelResolved);
 			}

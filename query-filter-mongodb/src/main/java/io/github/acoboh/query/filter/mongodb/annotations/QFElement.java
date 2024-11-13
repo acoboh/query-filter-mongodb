@@ -143,10 +143,11 @@ public @interface QFElement {
 	int order() default 0;
 
 	/**
-	 * If the filter is sortable, you can active Fetch Load automatically
-	 * 
-	 * @return true if fetch is enabled
+	 * When the field is SpEL and the evaluation throws an exception, the field will
+	 * be replaced with null instead of throwing the exception
+	 *
+	 * @return true if null on error is enabled
 	 */
-	boolean autoFetch() default true;
+	boolean nullOnError() default false;
 
 }

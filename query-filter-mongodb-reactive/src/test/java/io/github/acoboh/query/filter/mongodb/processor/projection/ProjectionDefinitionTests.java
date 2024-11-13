@@ -23,8 +23,8 @@ class ProjectionDefinitionTests {
 
 		// Check projection operation
 
-		String[] expectedFields = new String[] { "_id", "name", "inner1._id", "inner1.name1", "inner1.inner2._id",
-				"inner1.inner2.name2" };
+		String[] expectedFields = new String[] { "_id", "name", "testENUM", "inner1._id", "inner1.name1",
+				"inner1.inner2._id", "inner1.inner2.name2" };
 
 		var itr = projectionOperation.getFields().iterator();
 		int index = 0;

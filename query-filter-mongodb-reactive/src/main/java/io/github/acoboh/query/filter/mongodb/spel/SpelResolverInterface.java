@@ -6,6 +6,6 @@ import reactor.core.publisher.Mono;
 
 public interface SpelResolverInterface {
 
-	Mono<Object> evaluate(String securityExpression, MultiValueMap<String, Object> contextValues);
+	Mono<Object> evaluate(String securityExpression, MultiValueMap<String, Object> contextValues, boolean nullOnError);
 
 }

@@ -3,8 +3,11 @@ package io.github.acoboh.query.filter.mongodb.spel;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.PropertyValue;
 import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.util.MultiValueMap;
@@ -22,6 +25,8 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 public abstract class SpelResolverContext {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(SpelResolverContext.class);
+
 	/**
 	 * Evaluate any expression
 	 *
@@ -32,7 +37,7 @@ public abstract class SpelResolverContext {
 	 * @return object evaluated
 	 */
 	public Object evaluate(String securityExpression, MultiValueMap<String, Object> contextValues,
-			HttpServletRequest request, HttpServletResponse response) {
+			HttpServletRequest request, HttpServletResponse response, boolean nullOnError) {
 
 		ExpressionParser expressionParser = getExpressionParser();
 
@@ -46,7 +51,16 @@ public abstract class SpelResolverContext {
 
 		fillContextWithMap(context, contextValues);
 
-		return expression.getValue(context);
+		try {
+			return expression.getValue(context);
+		} catch (EvaluationException e) {
+			if (nullOnError) {
+				return null;
+			} else {
+				LOGGER.error("Error evaluating expression: {}", securityExpression, e);
+				throw e;
+			}
+		}
 
 	}
 

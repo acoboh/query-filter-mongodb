@@ -47,6 +47,7 @@ public class QFDefinitionElement extends QFAbstractDefinition implements IDefini
 	private final boolean sortable;
 	private final boolean spelExpression;
 	private final boolean blankIgnore;
+	private final boolean nullOnError;
 
 	private final int order;
 
@@ -82,6 +83,7 @@ public class QFDefinitionElement extends QFAbstractDefinition implements IDefini
 		spelExpression = Stream.of(elementAnnotations).allMatch(QFElement::isSpPELExpression);
 		blankIgnore = Stream.of(elementAnnotations).allMatch(QFElement::blankIgnore);
 		order = Stream.of(elementAnnotations).mapToInt(QFElement::order).max().getAsInt();
+		nullOnError = Stream.of(elementAnnotations).allMatch(QFElement::nullOnError);
 
 		var pair = getBuildPaths(elementAnnotations, entityClass);
 
@@ -210,6 +212,15 @@ public class QFDefinitionElement extends QFAbstractDefinition implements IDefini
 	 */
 	public boolean isSpelExpression() {
 		return spelExpression;
+	}
+
+	/**
+	 * Get if null on error is active for SpEL expressions
+	 *
+	 * @return true if null on error is active
+	 */
+	public boolean isNullOnError() {
+		return nullOnError;
 	}
 
 	/**

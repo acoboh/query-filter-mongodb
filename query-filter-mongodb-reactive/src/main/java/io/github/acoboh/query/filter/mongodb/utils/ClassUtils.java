@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -68,6 +70,22 @@ public class ClassUtils {
 		throw new QFTypeException(field.getName(), "It is not a valid list type");
 	}
 
+	private static final List<Class<?>> ASSIGNABLE_BASIC_PRIMITIVE_CLASSES = Arrays.asList( // All assignable classes
+			Double.class, Double.TYPE, // Doubles
+			Integer.class, Integer.TYPE, // Integers
+			Long.class, Long.TYPE, // Longs
+			Short.class, Short.TYPE, // Shorts
+			Float.class, Float.TYPE, // Floats
+			Boolean.class, Boolean.TYPE, // Booleans
+			Number.class, // Numbers
+			String.class, // Strings
+			Enum.class, // Enums
+			UUID.class, // UUID
+			LocalDateTime.class, // LocalDateTime
+			Timestamp.class, // Timestamp
+			Date.class // Date
+	);
+
 	/**
 	 * Check primitive or basic field
 	 * <p>
@@ -77,13 +95,8 @@ public class ClassUtils {
 	 * @return true if primitive, false otherwise
 	 */
 	public static boolean isPrimitiveOrBasic(Class<?> fieldClass) {
-		return fieldClass.isPrimitive() || Number.class.isAssignableFrom(fieldClass)
-				|| fieldClass.isAssignableFrom(Double.TYPE) || fieldClass.isAssignableFrom(Integer.TYPE)
-				|| fieldClass.isAssignableFrom(Long.TYPE) || fieldClass.isAssignableFrom(Short.TYPE)
-				|| fieldClass.isAssignableFrom(Float.TYPE) || fieldClass.isAssignableFrom(Boolean.class)
-				|| fieldClass.isAssignableFrom(Boolean.TYPE) || fieldClass.isAssignableFrom(String.class)
-				|| fieldClass.isAssignableFrom(Enum.class) || fieldClass.isAssignableFrom(UUID.class)
-				|| fieldClass.isAssignableFrom(LocalDateTime.class) || fieldClass.isAssignableFrom(Timestamp.class);
+		return fieldClass.isPrimitive()
+				|| ASSIGNABLE_BASIC_PRIMITIVE_CLASSES.stream().anyMatch(e -> e.isAssignableFrom(fieldClass));
 
 	}
 
@@ -94,7 +107,7 @@ public class ClassUtils {
 	 * @return true if enum, false otherwise
 	 */
 	public static boolean isEnum(Class<?> fieldClass) {
-		return fieldClass.isEnum() || fieldClass.isAssignableFrom(Enum.class);
+		return fieldClass.isEnum() || Enum.class.isAssignableFrom(fieldClass);
 	}
 
 	/**
@@ -104,7 +117,7 @@ public class ClassUtils {
 	 * @return true if list, array or set, false otherwise
 	 */
 	public static boolean isListArrayOrSet(Class<?> fieldClass) {
-		return fieldClass.isArray() || fieldClass.isAssignableFrom(List.class)
-				|| fieldClass.isAssignableFrom(Set.class);
+		return fieldClass.isArray() || List.class.isAssignableFrom(fieldClass)
+				|| Set.class.isAssignableFrom(fieldClass);
 	}
 }

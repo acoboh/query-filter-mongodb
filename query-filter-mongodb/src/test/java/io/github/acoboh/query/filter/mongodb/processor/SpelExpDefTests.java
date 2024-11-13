@@ -135,6 +135,19 @@ class SpelExpDefTests {
 	}
 
 	@Test
+	@DisplayName("4. Test SpEL is blank")
+	@Order(4)
+	void testSpELIsBlank() {
+
+		var qf = qfProcessor.newQueryFilter("", QFParamType.RHS_COLON);
+		assertThat(qf).isNotNull();
+
+		var blogList = qf.executeFindQuery();
+		assertThat(blogList).containsExactlyInAnyOrder(DOC_1, DOC_2);
+
+	}
+
+	@Test
 	@DisplayName("END. Cleanup")
 	@Order(Ordered.LOWEST_PRECEDENCE)
 	void cleanup() {
