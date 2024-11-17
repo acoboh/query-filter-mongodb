@@ -80,8 +80,7 @@ public class QFElementMatch implements QFSpecificationPart {
 	 * @param context      context to resolve SpEL expressions
 	 * @param request      request
 	 * @param response     response
-	 * @return true if initialized
-	 */
+     */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void initialize(SpelResolverContext spelResolver, MultiValueMap<String, Object> context,
 			HttpServletRequest request, HttpServletResponse response) {

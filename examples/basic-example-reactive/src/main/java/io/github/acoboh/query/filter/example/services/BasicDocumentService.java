@@ -9,13 +9,13 @@ import reactor.core.publisher.Mono;
 
 public interface BasicDocumentService {
 
-	public Mono<Page<BasicDocumentDTO>> getPosts(QueryFilter<BasicDocument> filter, int page, int size);
+	Mono<Page<BasicDocumentDTO>> getPosts(QueryFilter<BasicDocument> filter, int page, int size);
 
-	public Mono<String> createPost(BasicDocumentDTO post);
+	Mono<String> createPost(BasicDocumentDTO post);
 
-	public Mono<BasicDocumentDTO> getPost(String uuid);
+	Mono<BasicDocumentDTO> getPost(String uuid);
 
-	public Mono<Void> updatePost(String uuid, BasicDocumentDTO post);
+	Mono<Void> updatePost(String uuid, BasicDocumentDTO post);
 
-	public Mono<Void> deletePost(String uuid);
+	Mono<Void> deletePost(String uuid);
 }

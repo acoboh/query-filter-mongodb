@@ -305,7 +305,7 @@ public class QueryFilter<E> {
 			throw new QFMultipleSortException(field);
 		}
 
-		this.sortDefinitionList.add(Pair.of((IDefinitionSortable) def, direction));
+		this.sortDefinitionList.add(Pair.of(isort, direction));
 		this.defaultSortEnabled = false;
 
 	}

@@ -171,8 +171,7 @@ public abstract class OpenApiCustomiserAbstract implements OpenApiCustomizer {
 			return null;
 		}
 
-		QFProcessor<?, ?> processor = applicationContext.getBean(names[0], QFProcessor.class);
-		return processor;
+        return applicationContext.getBean(names[0], QFProcessor.class);
 	}
 
 }

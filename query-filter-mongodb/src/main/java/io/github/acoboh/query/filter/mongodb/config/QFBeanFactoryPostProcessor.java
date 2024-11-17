@@ -134,7 +134,7 @@ public class QFBeanFactoryPostProcessor
 
 	}
 
-	private QFProcessor<?, ?> registerQueryFilterClass(Class<?> cl, BeanDefinitionRegistry beanFactory)
+	private void registerQueryFilterClass(Class<?> cl, BeanDefinitionRegistry beanFactory)
 			throws QueryFilterDefinitionException {
 
 		String beanName = cl.getName() + "queryFilterBean";
@@ -142,7 +142,7 @@ public class QFBeanFactoryPostProcessor
 		QFDefinitionClass annotationClass = cl.getAnnotation(QFDefinitionClass.class);
 		if (annotationClass == null) {
 			LOGGER.warn("The class {} missing annotation QueryFilterClass", cl);
-			return null;
+			return;
 		}
 
 		ResolvableType resolvableType = ResolvableType.forClassWithGenerics(QFProcessor.class, cl,
@@ -167,7 +167,6 @@ public class QFBeanFactoryPostProcessor
 			bf.registerBeanDefinition(beanName, beanDefinition);
 			QFProcessor<?, ?> ret = new QFProcessor<>(cl, annotationClass.value(), applicationContextAwareSupport);
 			bf.registerSingleton(beanName, ret);
-			return ret;
 		} catch (QueryFilterException e) {
 			LOGGER.error("Error registering bean query filter of class {}", cl);
 			throw e;
