@@ -1,6 +1,5 @@
 package io.github.acoboh.query.filter.example.services.impl;
 
-import org.mapstruct.factory.Mappers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -10,9 +9,11 @@ import org.springframework.stereotype.Service;
 import io.github.acoboh.query.filter.example.documents.BasicDocument;
 import io.github.acoboh.query.filter.example.domain.BasicDocumentDTO;
 import io.github.acoboh.query.filter.example.exceptions.ResourceNotFoundException;
+import io.github.acoboh.query.filter.example.filterdef.BasicDocumentFilterDef;
 import io.github.acoboh.query.filter.example.mapper.BasicDocumentMapper;
 import io.github.acoboh.query.filter.example.repositories.BasicDocumentRepository;
 import io.github.acoboh.query.filter.example.services.BasicDocumentService;
+import io.github.acoboh.query.filter.mongodb.processor.QFProcessor;
 import io.github.acoboh.query.filter.mongodb.processor.QueryFilter;
 import reactor.core.publisher.Mono;
 
@@ -20,12 +21,14 @@ import reactor.core.publisher.Mono;
 class BasicDocumentServiceImpl implements BasicDocumentService {
 
 	private static final Logger log = LoggerFactory.getLogger(BasicDocumentServiceImpl.class);
-	private static final BasicDocumentMapper mapper = Mappers.getMapper(BasicDocumentMapper.class);
+	private final BasicDocumentMapper mapper;
 
 	private final BasicDocumentRepository repository;
 
-	BasicDocumentServiceImpl(BasicDocumentRepository repository) {
+	BasicDocumentServiceImpl(BasicDocumentRepository repository, BasicDocumentMapper mapper,
+			QFProcessor<BasicDocumentFilterDef, BasicDocument> processor) {
 		this.repository = repository;
+		this.mapper = mapper;
 	}
 
 	@Override

@@ -14,14 +14,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.aot.BeanInstanceSupplier;
+import org.springframework.beans.factory.config.ConstructorArgumentValues;
+import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.ComponentScan;
@@ -44,19 +44,21 @@ import io.github.acoboh.query.filter.mongodb.processor.QFProcessor;
  * 
  */
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnProperty(prefix = "query.filter.post-processor", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class QFBeanFactoryPostProcessor
 		implements ApplicationContextAware, BeanDefinitionRegistryPostProcessor, Ordered {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(QFBeanFactoryPostProcessor.class);
 
 	private ApplicationContext applicationContext;
+	private ApplicationContextAwareSupport applicationContextAwareSupport;
 
 	/** {@inheritDoc} */
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		Assert.notNull(applicationContext, "ApplicationContext cannot be null");
 		this.applicationContext = applicationContext;
+
+		this.applicationContextAwareSupport = applicationContext.getBean(ApplicationContextAwareSupport.class);
 	}
 
 	private static Set<Class<?>> getClassAnnotated(List<String> packages) {
@@ -132,7 +134,7 @@ public class QFBeanFactoryPostProcessor
 
 	}
 
-	private QFProcessor<?, ?> registerQueryFilterClass(Class<?> cl, BeanDefinitionRegistry beanFactory)
+	private void registerQueryFilterClass(Class<?> cl, BeanDefinitionRegistry beanFactory)
 			throws QueryFilterDefinitionException {
 
 		String beanName = cl.getName() + "queryFilterBean";
@@ -140,7 +142,7 @@ public class QFBeanFactoryPostProcessor
 		QFDefinitionClass annotationClass = cl.getAnnotation(QFDefinitionClass.class);
 		if (annotationClass == null) {
 			LOGGER.warn("The class {} missing annotation QueryFilterClass", cl);
-			return null;
+			return;
 		}
 
 		ResolvableType resolvableType = ResolvableType.forClassWithGenerics(QFProcessor.class, cl,
@@ -149,26 +151,27 @@ public class QFBeanFactoryPostProcessor
 		beanDefinition.setTargetType(resolvableType);
 		beanDefinition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
 		beanDefinition.setAutowireCandidate(true);
-		beanDefinition.setInstanceSupplier(supplier());
+
+		LOGGER.trace("Registering bean definition for AOT");
+		ConstructorArgumentValues argValues = new ConstructorArgumentValues();
+		argValues.addGenericArgumentValue(cl);
+		argValues.addGenericArgumentValue(annotationClass.value());
+		argValues.addGenericArgumentValue(new RuntimeBeanReference("applicationContextAwareSupport"));
+
+		beanDefinition.setConstructorArgumentValues(argValues);
+		beanDefinition.setBeanClass(QFProcessor.class);
 
 		DefaultListableBeanFactory bf = (DefaultListableBeanFactory) beanFactory;
 
 		try {
 			bf.registerBeanDefinition(beanName, beanDefinition);
-			QFProcessor<?, ?> ret = new QFProcessor<>(cl, annotationClass.value(), applicationContext);
+			QFProcessor<?, ?> ret = new QFProcessor<>(cl, annotationClass.value(), applicationContextAwareSupport);
 			bf.registerSingleton(beanName, ret);
-			return ret;
 		} catch (QueryFilterException e) {
 			LOGGER.error("Error registering bean query filter of class {}", cl);
 			throw e;
 		}
 
-	}
-
-	BeanInstanceSupplier<QFProcessor<?, ?>> supplier() {
-		return BeanInstanceSupplier
-				.<QFProcessor<?, ?>>forConstructor(Class.class, Class.class, ApplicationContext.class)
-				.withGenerator((rBean, args) -> new QFProcessor<>(args.get(0), args.get(1), args.get(2)));
 	}
 
 	/** {@inheritDoc} */

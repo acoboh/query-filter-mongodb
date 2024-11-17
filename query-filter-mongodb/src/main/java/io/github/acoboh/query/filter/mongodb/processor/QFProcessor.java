@@ -17,6 +17,7 @@ import org.springframework.data.util.Pair;
 import io.github.acoboh.query.filter.mongodb.annotations.QFDefinitionClass;
 import io.github.acoboh.query.filter.mongodb.annotations.QFProjection;
 import io.github.acoboh.query.filter.mongodb.annotations.QFProjections;
+import io.github.acoboh.query.filter.mongodb.config.ApplicationContextAwareSupport;
 import io.github.acoboh.query.filter.mongodb.exceptions.QueryFilterException;
 import io.github.acoboh.query.filter.mongodb.exceptions.definition.QFClassException;
 import io.github.acoboh.query.filter.mongodb.exceptions.definition.QFElementException;
@@ -53,6 +54,11 @@ public class QFProcessor<F, E> {
 	private final ApplicationContext appContext;
 
 	private final Map<Class<?>, ProjectionDefinition> mapProjections;
+
+	public QFProcessor(Class<F> filterClass, Class<E> entityClass, ApplicationContextAwareSupport appContext)
+			throws QueryFilterDefinitionException {
+		this(filterClass, entityClass, appContext.getApplicationContext());
+	}
 
 	/**
 	 * Create a new instance of {@linkplain QFProcessor}

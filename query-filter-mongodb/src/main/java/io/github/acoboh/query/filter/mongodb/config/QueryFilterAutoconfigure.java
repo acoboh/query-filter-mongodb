@@ -13,7 +13,8 @@ import io.github.acoboh.query.filter.mongodb.spel.SpelResolverBeanConfig;
  */
 @AutoConfiguration
 @Import({ QFExceptionAdvisor.class, SpelResolverBeanConfig.class, QFBeanFactoryPostProcessor.class,
-		QFWebMvcConfigurer.class, QueryFilterProperties.class, HintsRegistrarDef.class })
+		QFWebMvcConfigurer.class, QueryFilterProperties.class, HintsRegistrarDef.class,
+		ApplicationContextAwareSupport.class })
 public class QueryFilterAutoconfigure {
 
 }

@@ -7,12 +7,10 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 import io.github.acoboh.query.filter.example.filterdef.BasicDocumentFilterDef;
 import io.github.acoboh.query.filter.example.repositories.BasicDocumentRepository;
 import io.github.acoboh.query.filter.mongodb.annotations.EnableQueryFilter;
-import org.springframework.data.web.config.EnableSpringDataWebSupport;
 
-@SpringBootApplication
+@SpringBootApplication(proxyBeanMethods = false)
 @EnableQueryFilter(basePackageClasses = BasicDocumentFilterDef.class)
 @EnableReactiveMongoRepositories(basePackageClasses = BasicDocumentRepository.class)
-@EnableSpringDataWebSupport
 public class QueryFilterBasicExampleApplication {
 
 	public static void main(String[] args) {

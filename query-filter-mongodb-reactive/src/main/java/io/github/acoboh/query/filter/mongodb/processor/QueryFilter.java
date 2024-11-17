@@ -305,7 +305,7 @@ public class QueryFilter<E> {
 			throw new QFMultipleSortException(field);
 		}
 
-		this.sortDefinitionList.add(Pair.of((IDefinitionSortable) def, direction));
+		this.sortDefinitionList.add(Pair.of(isort, direction));
 		this.defaultSortEnabled = false;
 
 	}
@@ -493,10 +493,8 @@ public class QueryFilter<E> {
 
 		return Flux.fromIterable(sortedParts).doOnNext(e -> LOGGER.debug("Processing part {}", e)).flatMap(part ->
 		// Process each part
-		part.processPart(criteriaMap, mlmap, spelResolver)
-		).then( // Process the final criteria
-				Mono.fromCallable(() -> parseFinalCriteria(criteriaMap)
-				) // Final criteria processing
+		part.processPart(criteriaMap, mlmap, spelResolver)).then( // Process the final criteria
+				Mono.fromCallable(() -> parseFinalCriteria(criteriaMap)) // Final criteria processing
 		).doOnSuccess(c -> {
 			if (LOGGER.isTraceEnabled()) {
 				LOGGER.trace("Final criteria {}", c.getCriteriaObject().toBsonDocument());

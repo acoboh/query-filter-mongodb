@@ -63,11 +63,6 @@ public class HintsRegistrarDef {
 
 			}
 
-			// Add for security
-			// TODO: Add for security
-//			rh.registerType(jakarta.servlet.http.HttpServletRequest.class, MemberCategory.values());
-//			hints.proxies().registerJdkProxy(jakarta.servlet.http.HttpServletRequest.class);
-
 			hints.resources().registerPattern("queryfilter-messages/messages_*.properties");
 
 		}
