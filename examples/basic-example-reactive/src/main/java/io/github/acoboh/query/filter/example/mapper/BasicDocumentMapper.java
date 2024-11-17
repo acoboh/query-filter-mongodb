@@ -6,7 +6,7 @@ import org.mapstruct.MappingTarget;
 import io.github.acoboh.query.filter.example.documents.BasicDocument;
 import io.github.acoboh.query.filter.example.domain.BasicDocumentDTO;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface BasicDocumentMapper {
 
 	// To DTO methods

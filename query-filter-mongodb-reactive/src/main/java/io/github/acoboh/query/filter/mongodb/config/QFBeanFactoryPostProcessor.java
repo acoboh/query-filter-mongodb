@@ -14,7 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.aot.BeanInstanceSupplier;
+import org.springframework.beans.factory.config.ConstructorArgumentValues;
+import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
@@ -49,12 +50,15 @@ public class QFBeanFactoryPostProcessor
 	private static final Logger LOGGER = LoggerFactory.getLogger(QFBeanFactoryPostProcessor.class);
 
 	private ApplicationContext applicationContext;
+	private ApplicationContextAwareSupport applicationContextAwareSupport;
 
 	/** {@inheritDoc} */
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		Assert.notNull(applicationContext, "ApplicationContext cannot be null");
 		this.applicationContext = applicationContext;
+
+		this.applicationContextAwareSupport = applicationContext.getBean(ApplicationContextAwareSupport.class);
 	}
 
 	private static Set<Class<?>> getClassAnnotated(List<String> packages) {
@@ -147,13 +151,22 @@ public class QFBeanFactoryPostProcessor
 		beanDefinition.setTargetType(resolvableType);
 		beanDefinition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
 		beanDefinition.setAutowireCandidate(true);
-		beanDefinition.setInstanceSupplier(supplier(cl, annotationClass.value()));
+
+		LOGGER.trace("Registering bean definition for AOT");
+		ConstructorArgumentValues argValues = new ConstructorArgumentValues();
+		argValues.addIndexedArgumentValue(0, cl);
+		argValues.addIndexedArgumentValue(1, annotationClass.value());
+		argValues.addIndexedArgumentValue(2, new RuntimeBeanReference("applicationContextAwareSupport"));
+
+		beanDefinition.setConstructorArgumentValues(argValues);
+
+		beanDefinition.setBeanClass(QFProcessor.class);
 
 		DefaultListableBeanFactory bf = (DefaultListableBeanFactory) beanFactory;
 
 		try {
 			bf.registerBeanDefinition(beanName, beanDefinition);
-			QFProcessor<?, ?> ret = new QFProcessor<>(cl, annotationClass.value(), applicationContext);
+			QFProcessor<?, ?> ret = new QFProcessor<>(cl, annotationClass.value(), applicationContextAwareSupport);
 			bf.registerSingleton(beanName, ret);
 			return ret;
 		} catch (QueryFilterException e) {
@@ -161,11 +174,6 @@ public class QFBeanFactoryPostProcessor
 			throw e;
 		}
 
-	}
-
-	<F, E> BeanInstanceSupplier<QFProcessor<F, E>> supplier(Class<F> fClazz, Class<E> eClazz) {
-		return BeanInstanceSupplier.<QFProcessor<F, E>>forConstructor(fClazz, eClazz, ApplicationContext.class)
-				.withGenerator((rBean, args) -> new QFProcessor<>(args.get(0), args.get(1), args.get(2)));
 	}
 
 	/** {@inheritDoc} */

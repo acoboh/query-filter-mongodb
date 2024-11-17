@@ -13,7 +13,8 @@ import io.github.acoboh.query.filter.mongodb.spel.SpelConfig;
  */
 @AutoConfiguration
 @Import({ QueryFilterProperties.class, QFExceptionAdvisor.class, SpelConfig.class, QFBeanFactoryPostProcessor.class,
-		QFWebFluxConfigurer.class, QueryFilterProperties.class, HintsRegistrarDef.class })
+		QFWebFluxConfigurer.class, QueryFilterProperties.class, HintsRegistrarDef.class,
+		ApplicationContextAwareSupport.class })
 public class QueryFilterAutoconfigure {
 
 }
