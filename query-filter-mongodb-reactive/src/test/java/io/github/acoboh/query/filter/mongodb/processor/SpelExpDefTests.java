@@ -28,7 +28,6 @@ import io.github.acoboh.query.filter.mongodb.repositories.PostBlogDocumentReposi
 import io.github.acoboh.query.filter.mongodb.spring.SpringIntegrationTestBase;
 import reactor.core.publisher.SignalType;
 import reactor.test.StepVerifier;
-import reactor.test.util.TestLogger;
 import reactor.util.Logger;
 import reactor.util.Loggers;
 

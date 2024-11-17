@@ -493,10 +493,8 @@ public class QueryFilter<E> {
 
 		return Flux.fromIterable(sortedParts).doOnNext(e -> LOGGER.debug("Processing part {}", e)).flatMap(part ->
 		// Process each part
-		part.processPart(criteriaMap, mlmap, spelResolver)
-		).then( // Process the final criteria
-				Mono.fromCallable(() -> parseFinalCriteria(criteriaMap)
-				) // Final criteria processing
+		part.processPart(criteriaMap, mlmap, spelResolver)).then( // Process the final criteria
+				Mono.fromCallable(() -> parseFinalCriteria(criteriaMap)) // Final criteria processing
 		).doOnSuccess(c -> {
 			if (LOGGER.isTraceEnabled()) {
 				LOGGER.trace("Final criteria {}", c.getCriteriaObject().toBsonDocument());
