@@ -51,14 +51,14 @@ You can install the library by adding the following dependency to your project's
     <dependency>
         <groupId>io.github.acoboh</groupId>
         <artifactId>query-filter-mongodb</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
+        <version>0.1.0</version>
     </dependency>
 
     <!-- Or Reactive version -->
     <dependency>
         <groupId>io.github.acoboh</groupId>
         <artifactId>query-filter-mongodb-reactive</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
+        <version>0.1.0</version>
     </dependency>
 </dependencies>
 ```
@@ -231,7 +231,7 @@ You need to import the following library:
 <dependency>
     <groupId>io.github.acoboh</groupId>
     <artifactId>query-filter-mongodb-openapi</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 
