@@ -23,7 +23,7 @@
         <spring-boot.version>3.4.2</spring-boot.version>
 
         <!--OpenAPI dependencies -->
-        <openapi.version>2.7.0</openapi.version>
+        <openapi.version>2.8.5</openapi.version>
 
     </properties>
 
