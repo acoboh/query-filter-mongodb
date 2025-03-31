@@ -68,7 +68,7 @@
         <assertj-core.version>3.26.3</assertj-core.version>
 
         <!-- Guava dependencies -->
-        <guava.version>33.3.1-jre</guava.version>
+        <guava.version>33.4.6-jre</guava.version>
 
         <!-- Reflections -->
         <reflections.version>0.10.2</reflections.version>
