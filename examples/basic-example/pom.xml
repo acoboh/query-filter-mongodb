@@ -30,7 +30,7 @@
 		<springdoc.version>2.7.0-RC1</springdoc.version>
 
 		<!-- Query Filter Versions -->
-		<query-filter.version>0.0.1</query-filter.version>
+		<query-filter.version>0.1.0</query-filter.version>
 
 		<!-- Mapstruct -->
 		<mapstruct.version>1.6.3</mapstruct.version>
