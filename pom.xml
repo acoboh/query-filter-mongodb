@@ -65,7 +65,7 @@
         <maven-surfire-plugin.version>3.5.3</maven-surfire-plugin.version>
         <sonartype-publishing.version>0.8.0</sonartype-publishing.version>
 
-        <testcontainers.version>1.21.2</testcontainers.version>
+        <testcontainers.version>1.21.3</testcontainers.version>
         <junit.version>5.13.1</junit.version>
         <assertj-core.version>3.27.3</assertj-core.version>
 
